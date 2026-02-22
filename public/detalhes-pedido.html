@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes pedidos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="config/auth.js"></script>
+    <link rel="stylesheet" href="css/cardapio.css">
+    <link rel="stylesheet" href="css/detalhes-pedido.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg" class="logo" alt="Logo">
+        </div>
+        <h2 class="label-mesa">...</h2>
+        <nav class="desktop-menu">
+            <a href="cozinha.html" title="Início"><i class="fas fa-close"></i></a>
+        </nav>
+    </header>
+
+    <main class="conteudo-principal">
+        
+        <h2 class="titulo-sessao">PEDIDOS</h2>
+
+        <div id="lista-itens-cozinha">
+            <p class="msg-status">Carregando itens...</p>
+        </div>
+    </main>
+
+    <footer class="footer-final">
+        <div class="opcoes">
+            <button class="btn-ok">COMEÇAR PREPARO</button>
+        </div>
+    </footer>
+
+    <div id="modal-revisao" class="modal">
+        <div class="modal-content">
+            <header class="header-modal">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg" class="logo-modal"
+                    alt="Logo">
+            </header>
+
+            <main class="conteudo-principal">
+                <h2 class="titulo-painel">PAINEL DA COZINHA</h2>
+
+                <div class="abas-navegacao">
+                    <button id="aba-novos" class="aba-item active" onclick="alternarAba('Enviado')">NOVOS</button>
+                    <button id="aba-preparo" class="aba-item" onclick="alternarAba('Preparando')">EM PREPARO</button>
+                </div>
+
+                <div id="lista-pedidos" class="lista-pedidos">
+                </div>
+            </main>
+
+            <footer class="footer-modal">
+                <div class="caixa-total-modal">
+                    <span class="label-total">Total</span>
+                    <span id="total-modal" class="valor-total">R$ 0,00</span>
+                </div>
+                <button class="btn-finalizar" onclick="verificarBebidasAntesDeEnviar()">FINALIZAR PEDIDO</button>
+                <button class="btn-voltar-modal" onclick="fecharModal()">VOLTAR</button>
+            </footer>
+        </div>
+    </div>
+
+    <script src="js/produtos.js"></script>
+    <script src="js/detalhes-pedido.js"></script>
+</body>
+
+</html>

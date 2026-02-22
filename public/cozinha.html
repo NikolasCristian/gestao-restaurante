@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Gerente</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="config/auth.js"></script>
     <link rel="stylesheet" href="css/estilo-padrao.css">
+    <link rel="stylesheet" href="css/cozinha.css">
 </head>
 
 <body>
@@ -48,10 +50,20 @@
         </button>
     </div>
 
-    <main class="container">
+    <main class="conteudo-principal">
+        <h2 class="titulo-painel">PAINEL DA COZINHA</h2>
+
+        <div class="abas-navegacao">
+            <button id="aba-novos" class="aba-item active" onclick="alternarAba('Enviado')">NOVOS</button>
+            <button id="aba-preparo" class="aba-item" onclick="alternarAba('Preparando')">EM PREPARO</button>
+        </div>
+
+        <div id="lista-pedidos" class="lista-pedidos">
+        </div>
     </main>
 
     <script src="js/estilo-padrao.js"></script>
+    <script src="js/cozinha.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,101 @@
+body { background-color: #e0e0e0; font-family: sans-serif; margin: 0; }
+
+.header-painel {
+    background-color: #000;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nenhum-pedido{
+    color: #aaaaaa;
+    text-align: center;
+    font-size: 15px;
+}
+
+.logo-circulo {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.titulo-painel {
+    text-align: left;
+    padding-left: 20px;
+    font-size: 18px;
+    font-weight: 900;
+    margin: 20px 0 10px 0;
+    color: #000;
+}
+
+.abas-navegacao {
+    display: flex;
+    gap: 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.aba-item {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #fff;
+    color: #000;
+}
+
+.aba-item.active {
+    background: #000;
+    color: #fff;
+}
+
+.lista-pedidos {
+    padding: 0 20px;
+}
+
+/* O CARD DA LISTA IGUAL À FOTO */
+.item-pedido-lista {
+    background: #fff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.mesa-indicador {
+    background: #d9d9d9;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.btn-ver {
+    background: #6eff9d; /* Verde limão da foto */
+    border: none;
+    width: 120px;
+    height: 50px;
+    border-radius: 12px;
+    font-size: 22px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.horario-pedido {
+    font-weight: 900;
+    font-size: 16px;
+    padding-right: 10px;
+    color: #000;
+}

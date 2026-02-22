@@ -12,6 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="config/auth.js"></script>
     <link rel="stylesheet" href="css/estilo-padrao.css">
+    <link rel="stylesheet" href="css/garcom.css">
 </head>
 
 <body>
@@ -22,8 +23,7 @@
         </div>
 
         <nav class="desktop-menu">
-            <a href="gerente.html" title="Início"><i class="fas fa-home"></i></a>
-            <a href="cadastrar-funcionario.html" title="Cadastrar Funcionário"><i class="fas fa-user-plus"></i></a>
+            <a href="garcom.html" title="Início"><i class="fas fa-home"></i></a>
             <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
         </nav>
 
@@ -41,8 +41,7 @@
         </div>
 
         <nav class="menu-links">
-            <a href="gerente.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
-            <a href="cadastrar-funcionario.html"><i class="fas fa-user-plus"></i> CADASTRAR FUNCIONÁRIO</a>
+            <a href="garcom.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
         </nav>
 
         <button onclick="logout()" class="logout-btn">
@@ -51,10 +50,33 @@
     </div>
 
     <main class="container">
-        
+        <section class="secao-mesas">
+            <h2 class="titulo-sessao">Mapa das mesas</h2>
+
+            <div class="filtros-mesas">
+                <input type="text" id="buscaMesa" placeholder="PESQUISAR..." onkeyup="filtrarMesas()">
+                <select id="filtroStatus" onchange="filtrarMesas()">
+                    <option value="TODAS">TODAS</option>
+                    <option value="LIVRE">LIVRE</option>
+                    <option value="OCUPADA">OCUPADA</option>
+                </select>
+            </div>
+
+            <div class="grid-mesas" id="container-mesas">
+                
+            </div>
+
+            <div class="pedido-sem-mesa">
+                <button class="btn-sem-mesa">
+                    <span>PEDIDO SEM MESA</span>
+                    <i class="fas fa-hand-holding-medical"></i>
+                </button>
+            </div>
+        </section>
     </main>
 
     <script src="js/estilo-padrao.js"></script>
+    <script src="js/garcom.js"></script>
 </body>
 
 </html>

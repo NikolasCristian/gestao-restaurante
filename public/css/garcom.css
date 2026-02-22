@@ -1,0 +1,151 @@
+/* Configurações Gerais da Seção */
+.secao-mesas {
+    padding: 15px;
+    background-color: #f0f0f0; /* Fundo cinza claro igual da imagem */
+    min-height: 100vh;
+}
+
+.titulo-sessao {
+    font-family: 'Flame', sans-serif; /* Fonte padrão BK se tiver, senão sans-serif */
+    font-weight: 900;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+/* Filtros de Busca e Select */
+.filtros-mesas {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.filtros-mesas input, .filtros-mesas select {
+    border: none;
+    border-radius: 15px;
+    padding: 12px 15px;
+    font-weight: 800;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    outline: none;
+}
+
+.filtros-mesas input { flex: 2; text-transform: uppercase; font-size: 13px; }
+.filtros-mesas select { flex: 1; text-align: center; cursor: pointer; }
+
+/* Grid das Mesas - 2 colunas */
+.grid-mesas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+/* Card Individual da Mesa */
+.card-mesa {
+    background: #fff;
+    border-radius: 25px; /* Bordas bem arredondadas conforme print */
+    padding: 18px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.card-mesa:active { transform: scale(0.95); }
+
+/* Informações Internas (Lado Esquerdo) */
+.info-mesa h3 {
+    color: #000;
+    font-size: 14px;
+    font-weight: 900;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+}
+
+.status-texto {
+    color: #000;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+/* Detalhes de Ocupação (Tempo e Valor) */
+.detalhes-ocupada {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detalhes-ocupada span {
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #333;
+}
+
+.detalhes-ocupada i { 
+    font-size: 12px;
+    width: 14px;
+}
+
+.detalhes-ocupada .fa-clock { color: #888; }
+.detalhes-ocupada .fa-dollar-sign { color: #2ecc71; }
+
+/* Ícone da Mesa (Lado Direito) */
+.icon-area {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.icon-area i { color: #2d2d2d; }
+
+/* Cores de Status */
+.card-mesa.livre .icon-area { background-color: #00ff00; } /* Verde neon */
+.card-mesa.livre .status-texto i { color: #00ff00; }
+
+.card-mesa.ocupada .icon-area { background-color: #ff0000; } /* Vermelho puro */
+.card-mesa.ocupada .status-texto i { color: #ff0000; }
+
+/* Botão de Pedido Sem Mesa */
+.pedido-sem-mesa {
+    position: sticky;
+    bottom: 20px;
+}
+
+.btn-sem-mesa {
+    width: 100%;
+    background: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 22px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-weight: 900;
+    font-size: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.btn-sem-mesa i {
+    background: #e0e0e0;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 20px;
+    color: #333;
+}
