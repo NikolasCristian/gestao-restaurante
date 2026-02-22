@@ -99,16 +99,10 @@ carregarPedidos();
 
 function carregarPedidos() {
     const lista = document.getElementById('lista-pedidos');
-
-    // Mostra um carregando inicial
     lista.innerHTML = '<p class="msg-status">Carregando...</p>';
 
-    // Escuta a coleção de mesas
     db.collection('mesas').onSnapshot(snapshotMesas => {
-        // Limpamos a lista para reconstruir do zero a cada mudança no banco
         lista.innerHTML = '';
-        let encontrouPedidos = false;
-        let totalMesasProcessadas = 0;
 
         if (snapshotMesas.empty) {
             lista.innerHTML = '<h2 class="nenhum-pedido">NENHUM PEDIDO</h2>';
@@ -119,27 +113,27 @@ function carregarPedidos() {
             const mesaDados = docMesa.data();
             const mesaId = docMesa.id;
 
-            // Escuta os pedidos dentro de cada mesa
             db.collection('mesas').doc(mesaId).collection('pedidos')
                 .onSnapshot(snapshotPedidos => {
-                    totalMesasProcessadas++;
 
                     snapshotPedidos.forEach(docPed => {
                         const pedido = docPed.data();
                         const pedidoId = docPed.id;
 
-                        // Filtra pelo status da aba atual (ENVIADO ou PREPARANDO)
-                        if (pedido.statusDoPedido === abaAtual) {
+                        // --- NOVA LÓGICA DE FILTRO ---
+                        // 1. Verifica se o status bate com a aba (ENVIADO/PREPARANDO)
+                        // 2. Verifica se existe pelo menos UM item que não seja bebida
+                        const temComida = pedido.itens.some(item => item.categoria !== 'bebidas');
+
+                        if (pedido.statusDoPedido === abaAtual && temComida) {
                             renderizarLinhaPedido(mesaDados.numero, pedido, mesaId, pedidoId);
-                            encontrouPedidos = true;
                         }
                     });
 
-                    // Após checar as mesas, se não houver nenhum item na lista, mostra a frase
-                    // O timeout ajuda a esperar o retorno de todas as subcoleções
+                    // Verifica se a lista ficou vazia após o filtro de comida
                     setTimeout(() => {
-                        const temItens = lista.querySelector('.item-pedido-lista');
-                        if (!temItens) {
+                        const temItensNaTela = lista.querySelector('.item-pedido-lista');
+                        if (!temItensNaTela) {
                             lista.innerHTML = '<h2 class="nenhum-pedido">NENHUM PEDIDO</h2>';
                         }
                     }, 300);

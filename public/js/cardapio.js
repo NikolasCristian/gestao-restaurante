@@ -128,13 +128,58 @@ function fecharModalBebida() {
     document.getElementById('modal-bebida').style.display = 'none';
 }
 
-function verificarBebidasAntesDeEnviar() {
-    const temBebida = alimentos.some(p => pedidoAtual[p.id] > 0 && p.categoria === 'bebidas');
+async function verificarBebidasAntesDeEnviar() {
+    // 1. Verifica se há bebidas no pedido ATUAL que está sendo feito agora
+    const temBebidaNoPedidoAtual = alimentos.some(p => pedidoAtual[p.id] > 0 && p.categoria === 'bebidas');
 
-    if (temBebida) {
+    // 2. Verifica se há comida (lanche/pizza) no pedido ATUAL
+    const temComidaNoPedidoAtual = alimentos.some(p => pedidoAtual[p.id] > 0 && p.categoria !== 'bebidas');
+
+    // Se não tem bebida nenhuma sendo pedida agora, envia direto (comida pura)
+    if (!temBebidaNoPedidoAtual) {
+        await enviarPedidoFirebase();
+        return;
+    }
+
+    // Se tem bebida e TAMBÉM tem comida no mesmo carrinho, mostra o modal
+    if (temComidaNoPedidoAtual) {
         document.getElementById('modal-bebida').style.display = 'flex';
-    } else {
-        enviarPedidoFirebase();
+        return;
+    }
+
+    // Se só tem bebida no carrinho atual, precisamos checar se a mesa JÁ TEM lanche sendo feito na cozinha
+    try {
+        const mesaTexto = document.getElementById('numero-mesa').innerText;
+        const numeroMesa = mesaTexto.replace('Mesa ', '').trim();
+        const mesaRef = db.collection("mesas").doc(`mesa-${numeroMesa}`);
+
+        // Busca todos os pedidos dessa mesa que ainda não foram finalizados
+        const snapshot = await mesaRef.collection("pedidos")
+            .where("statusDoPedido", "in", ["ENVIADO", "PREPARANDO"])
+            .get();
+
+        let jaExisteLancheSendoFeito = false;
+
+        snapshot.forEach(doc => {
+            const dados = doc.data();
+            // Verifica se dentro desse pedido antigo existe algum item que não é bebida
+            if (dados.itens.some(item => item.categoria !== 'bebidas')) {
+                jaExisteLancheSendoFeito = true;
+            }
+        });
+
+        if (jaExisteLancheSendoFeito) {
+            // Se já tem um lanche lá, pergunta se quer mandar a bebida agora ou com ele
+            document.getElementById('modal-bebida').style.display = 'flex';
+        } else {
+            // Se a mesa está vazia de comida, manda a bebida direto
+            await enviarPedidoFirebase();
+        }
+
+    } catch (error) {
+        console.error("Erro ao verificar histórico da mesa:", error);
+        // Em caso de erro, por segurança, envia o pedido
+        await enviarPedidoFirebase();
     }
 }
 
@@ -196,7 +241,7 @@ async function enviarPedidoFirebase() {
         // Limpa a variável global e o pedido
         window.preferenciaBebida = null;
         alert("Pedido enviado com sucesso!");
-        
+
         fecharModal();
         window.location.href = "garcom.html";
 

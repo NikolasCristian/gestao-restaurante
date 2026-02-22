@@ -1,0 +1,271 @@
+body { background-color: #e0e0e0; font-family: sans-serif; margin: 0; }
+
+.header-painel {
+    background-color: #000;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nenhum-pedido{
+    color: #aaaaaa;
+    text-align: center;
+    font-size: 15px;
+}
+
+.logo-circulo {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.titulo-painel {
+    text-align: left;
+    padding-left: 20px;
+    font-size: 18px;
+    font-weight: 900;
+    margin: 20px 0 10px 0;
+    color: #000;
+}
+
+.abas-navegacao {
+    display: flex;
+    gap: 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.aba-item {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #fff;
+    color: #000;
+}
+
+.aba-item.active {
+    background: #000;
+    color: #fff;
+}
+
+.lista-pedidos {
+    padding: 0 20px;
+}
+
+/* O CARD DA LISTA IGUAL À FOTO */
+.item-pedido-lista {
+    background: #fff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.mesa-indicador {
+    background: #d9d9d9;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.btn-ver {
+    background: #6eff9d; /* Verde limão da foto */
+    border: none;
+    width: 120px;
+    height: 50px;
+    border-radius: 12px;
+    font-size: 22px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.horario-pedido {
+    font-weight: 900;
+    font-size: 16px;
+    padding-right: 10px;
+    color: #000;
+}
+
+/* 1. CONTAINER DO MODAL (Fundo escuro/Overlay) */
+#modal-detalhes {
+    display: none; /* Controlado pelo JS */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* 2. CAIXA DO CONTEÚDO (O Modal em si) */
+.box2 {
+    background-color: #e0e0e0; /* Fundo cinza claro igual à sua imagem */
+    width: 100%;
+    max-width: 400px;
+    border-radius: 35px; /* Bordas bem arredondadas */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    animation: fadeInModal 0.3s ease-out;
+}
+
+@keyframes fadeInModal {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 3. CABEÇALHO DO MODAL (Preto) */
+.box2 header {
+    background-color: #000;
+    color: #fff;
+    padding: 18px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box2 header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+}
+
+.box2 header button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* 4. CORPO DO MODAL (Onde ficam os itens) */
+#modal-lista-itens {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Estilo do título "PEDIDOS" dentro do modal */
+#modal-lista-itens h3 {
+    font-family: 'Arial Black', sans-serif;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+/* 5. CARDS DOS ITENS (Brancos) */
+.item-card-modal {
+    background-color: #fff;
+    border-radius: 20px;
+    display: flex;
+    padding: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.item-img-container {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-right: 15px;
+    background-color: #f9f9f9;
+}
+
+.item-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-info h4 {
+    margin: 0;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 0.95rem;
+    color: #000;
+}
+
+.item-obs {
+    margin: 3px 0;
+    font-size: 0.75rem;
+    color: #666;
+    line-height: 1.2;
+}
+
+/* Preço e Quantidade */
+.item-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.item-price {
+    font-weight: 900;
+    font-size: 0.9rem;
+    color: #000;
+}
+
+.item-qtd-badge {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 2px 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border: 1px solid #ddd;
+}
+
+/* 6. BOTÃO FECHAR INFERIOR */
+.box2 > button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    margin: 0 20px 20px 20px;
+    padding: 15px;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.box2 > button:active {
+    transform: scale(0.95);
+}
+
+/* Estilização da barra de rolagem interna */
+#modal-lista-itens::-webkit-scrollbar {
+    width: 6px;
+}
+
+#modal-lista-itens::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 10px;
+}
