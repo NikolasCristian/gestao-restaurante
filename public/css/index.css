@@ -1,0 +1,57 @@
+body {
+background-color: #000; /* Fundo preto conforme sua tela */
+font-family: Arial, sans-serif;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+}
+
+.login-container {
+width: 320px;
+padding: 40px 20px;
+border: 2px solid #ff0000; /* Borda vermelha com brilho */
+border-radius: 30px;
+text-align: center;
+box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+}
+
+.logo {
+width: 150px;
+margin-bottom: 30px;
+}
+
+input {
+width: 100%;
+padding: 15px;
+margin: 10px 0;
+background: #111;
+border: none;
+border-radius: 12px;
+color: #ff0000; /* Texto vermelho nos inputs */
+font-weight: bold;
+box-sizing: border-box;
+}
+
+input::placeholder { color: #555; }
+
+.forgot {
+color: #ff0000;
+font-size: 12px;
+text-decoration: none;
+display: block;
+margin: 10px 0;
+}
+
+button {
+width: 100%;
+padding: 15px;
+background-color: #f1b434; /* Amarelo do botão ENTRAR */
+border: none;
+border-radius: 15px;
+font-size: 18px;
+font-weight: 900;
+cursor: pointer;
+margin-top: 10px;
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Gerente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="config/auth.js"></script>
+    <link rel="stylesheet" href="css/estilo-padrao.css">
+    <link rel="stylesheet" href="css/gerente.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg" class="logo" alt="Logo">
+        </div>
+
+        <nav class="desktop-menu">
+            <a href="gerente.html" title="Início"><i class="fas fa-home"></i></a>
+            <a href="cadastrar-funcionario.html" title="Cadastrar Funcionário"><i class="fas fa-user-plus"></i></a>
+            <a href="consultar-funcionario.html" title="Consultar"><i class="fas fa-search"></i></a>
+            <a href="vendas.html" title="Vendas"><i class="fas fa-chart-line"></i></a>
+            <a href="historico.html" title="Histórico"><i class="fas fa-history"></i></a>
+            <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
+        </nav>
+
+        <button class="menu-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+    <div id="side-menu" class="side-menu">
+        <div class="menu-header">
+            <span>MENU GERENTE</span>
+            <button onclick="toggleMenu()" class="close-btn">&times;</button>
+        </div>
+
+        <nav class="menu-links">
+            <a href="gerente.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
+            <a href="cadastrar-funcionario.html"><i class="fas fa-user-plus"></i> CADASTRAR FUNCIONÁRIO</a>
+            <a href="consultar-funcionario.html"><i class="fas fa-search"></i> CONSULTAR FUNCIONÁRIO</a>
+            <a href="vendas.html"><i class="fas fa-chart-line"></i> VENDAS</a>
+            <a href="historico.html"><i class="fas fa-history"></i> HISTÓRICO DE PAGAMENTOS</a>
+        </nav>
+
+        <button onclick="logout()" class="logout-btn">
+            <i class="fas fa-power-off"></i> SAIR DO SISTEMA
+        </button>
+    </div>
+
+    <main class="container">
+        <section class="secao-status">
+            <h2>PAINEL DO GERENTE</h2>
+
+            <div class="card-preto">
+                <div class="label-titulo">FUNCIONARIOS</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="total-geral">3</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="num">1</span>
+                        <span class="cargo">GARÇOM</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="num">1</span>
+                        <span class="cargo">COZINHEIRO</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="num">1</span>
+                        <span class="cargo">BARMAN</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="acesso-rapido">
+            <h3>ACESSO RAPIDO</h3>
+            <div class="grid-botoes">
+                <button class="btn-card" onclick="location.href='cadastrar-funcionario.html'">
+                    <i class="fas fa-user-plus"></i>
+                    <span>CADASTRAR<br>FUNCIONARIO</span>
+                </button>
+                <button class="btn-card" onclick="location.href='consultar-funcionario.html'">
+                    <i class="fas fa-search"></i>
+                    <span>CONSULTAR<br>FUNCIONARIO</span>
+                </button>
+                <button class="btn-card" onclick="location.href='vendas.html'">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>VENDAS</span>
+                </button>
+                <button class="btn-card" onclick="location.href='historico.html'">
+                    <i class="fas fa-receipt"></i>
+                    <span>HISTORICO DE<br>PAGAMENTOS</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/estilo-padrao.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Gerente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="config/auth.js"></script>
+    <link rel="stylesheet" href="css/estilo-padrao.css">
+    <link rel="stylesheet" href="css/cadastro.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg" class="logo" alt="Logo">
+        </div>
+
+        <nav class="desktop-menu">
+            <a href="gerente.html" title="Início"><i class="fas fa-home"></i></a>
+            <a href="consultar-funcionario.html" title="Consultar"><i class="fas fa-search"></i></a>
+            <a href="vendas.html" title="Vendas"><i class="fas fa-chart-line"></i></a>
+            <a href="historico.html" title="Histórico"><i class="fas fa-history"></i></a>
+            <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
+        </nav>
+
+        <button class="menu-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+    <div id="side-menu" class="side-menu">
+        <div class="menu-header">
+            <span>MENU GERENTE</span>
+            <button onclick="toggleMenu()" class="close-btn">&times;</button>
+        </div>
+
+        <nav class="menu-links">
+            <a href="gerente.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
+            <a href="consultar-funcionario.html"><i class="fas fa-search"></i> CONSULTAR FUNCIONÁRIO</a>
+            <a href="vendas.html"><i class="fas fa-chart-line"></i> VENDAS</a>
+            <a href="historico.html"><i class="fas fa-history"></i> HISTÓRICO DE PAGAMENTOS</a>
+        </nav>
+
+        <button onclick="logout()" class="logout-btn">
+            <i class="fas fa-power-off"></i> SAIR DO SISTEMA
+        </button>
+    </div>
+
+    <main class="container">
+        <div class="form-card">
+            <h2>CADASTRAR FUNCIONÁRIO</h2>
+
+            <form id="form-cadastro">
+                <div class="input-group">
+                    <label>NOME COMPLETO</label>
+                    <input type="text" id="nome" placeholder="Digite o nome..." required>
+                </div>
+
+                <div class="input-group">
+                    <label>CARGO / FUNÇÃO</label>
+                    <select id="cargo" required>
+                        <option value="">Selecione...</option>
+                        <option value="GARÇOM">GARÇOM</option>
+                        <option value="COZINHA">COZINHEIRO</option>
+                        <option value="BARMAN">BARMAN</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>E-MAIL DE ACESSO</label>
+                    <input type="email" id="email" placeholder="email@exemplo.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>SENHA PROVISÓRIA</label>
+                    <input type="password" id="senha" placeholder="Mínimo 6 caracteres" required>
+                </div>
+
+                <div class="input-group">
+                    <label>CONFIRMAR SENHA</label>
+                    <input type="password" id="confirmar-senha" placeholder="Repita a senha" required>
+                </div>
+
+                <button type="submit" class="btn-salvar">
+                    <i class="fas fa-save"></i> SALVAR CADASTRO
+                </button>
+
+                <button type="button" class="btn-voltar" onclick="history.back()">
+                    VOLTAR
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/estilo-padrao.js"></script>
+    <script src="js/cadastro.js"></script>
+</body>
+
+</html>

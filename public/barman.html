@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Gerente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="config/auth.js"></script>
+    <link rel="stylesheet" href="css/estilo-padrao.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg" class="logo" alt="Logo">
+        </div>
+
+        <nav class="desktop-menu">
+            <a href="gerente.html" title="Início"><i class="fas fa-home"></i></a>
+            <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
+        </nav>
+
+        <button class="menu-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+    <div id="side-menu" class="side-menu">
+        <div class="menu-header">
+            <span>MENU GERENTE</span>
+            <button onclick="toggleMenu()" class="close-btn">&times;</button>
+        </div>
+
+        <nav class="menu-links">
+            <a href="gerente.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
+        </nav>
+
+        <button onclick="logout()" class="logout-btn">
+            <i class="fas fa-power-off"></i> SAIR DO SISTEMA
+        </button>
+    </div>
+
+    <main class="container">
+    </main>
+
+    <script src="js/estilo-padrao.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+/* Container Principal Compacto */
+.card-consulta {
+    background: #ffffff;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin: 10px auto;
+    max-width: 1100px;
+    color: #000000;
+}
+
+.card-consulta h2 {
+    color: #000000;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.card-consulta p {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+/* Tabela Ajustada */
+.tabela-estilizada {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-estilizada th {
+    background-color: #202124;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.tabela-estilizada td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    color: #000000;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Alinhamento dos Botões */
+.acoes-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-tabela-editar, .btn-tabela-excluir {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.btn-tabela-editar { background-color: #00e823; color: #000; }
+.btn-tabela-excluir { background-color: #d62300; color: #fff; }
+
+.btn-tabela-editar:hover { background-color: #00bc1c; transform: scale(1.05); }
+.btn-tabela-excluir:hover { background-color: #a31a00; transform: scale(1.05); }
+
+/* Badges de Cargo Pretas */
+.badge {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #000000 !important;
+    display: inline-block;
+}
+
+.badge-gerente { background: #f5ebdc; border: 1px solid #502314; }
+.badge-barman  { background: #ffe4b3; border: 1px solid #ff8c00; }
+.badge-cozinha { background: #b2dfdb; border: 1px solid #008080; }
+.badge-garcom  { background: #bbdefb; border: 1px solid #4a90e2; }
+
+/* Modal de Edição */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(2px);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 350px;
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: #000; }
+.close-modal { font-size: 24px; cursor: pointer; }
+
+.input-group { margin-bottom: 12px; text-align: left; }
+.input-group label { display: block; margin-bottom: 4px; font-weight: bold; color: #000; font-size: 0.85rem; }
+.input-group input, .input-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 15px; }
+.btn-cancelar { background: #eee; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; color: #000; }
+.btn-salvar { background: #502314; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+
+/* --- CÓDIGO QUE VOCÊ JÁ TEM (MANTÉM) --- */
+
+/* ... (seu código anterior aqui) ... */
+
+/* --- ADICIONE ESTA PARTE PARA RESPONSIVIDADE --- */
+
+/* Ajuste para telas médias (Tablets) */
+@media (max-width: 768px) {
+    .card-consulta {
+        width: 95%;
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .tabela-estilizada th, 
+    .tabela-estilizada td {
+        padding: 8px 5px;
+        font-size: 0.8rem;
+    }
+
+    .badge {
+        padding: 4px 8px;
+        min-width: 60px;
+    }
+}
+
+/* Ajuste para telas pequenas (Celulares) */
+@media (max-width: 480px) {
+    .card-consulta h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Esconde o E-mail em celulares muito pequenos para não apertar a tabela */
+    /* Se quiser manter o email, ignore as duas linhas abaixo */
+    .tabela-estilizada th:nth-child(2), 
+    .tabela-estilizada td:nth-child(2) { display: none; }
+
+    .acoes-container {
+        flex-direction: column; /* Botões um em cima do outro no celular */
+        gap: 5px;
+    }
+
+    .btn-tabela-editar, .btn-tabela-excluir {
+        width: 100%; /* Botão vira largura total na célula */
+        height: 30px;
+    }
+
+    .modal-content {
+        margin: 20% auto;
+        width: 95%;
+    }
+}
+
+/* Wrapper para scroll horizontal caso a tabela ainda seja grande */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
