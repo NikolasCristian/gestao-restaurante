@@ -59,7 +59,24 @@
     <main class="container">
         <div class="card-consulta">
             <h2><i class="fas fa-users"></i> Equipe Cadastrada</h2>
-            <p>Visualize e gerencie todos os funcionários do sistema.</p>
+
+            <div class="filtros-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="inputPesquisa" placeholder="Pesquisar por nome ou e-mail..." onkeyup="filtrarTabela()">
+                </div>
+
+                <div class="filter-box">
+                    <i class="fas fa-filter"></i>
+                    <select id="filtroCargo" onchange="filtrarTabela()">
+                        <option value="">Todos os Cargos</option>
+                        <option value="GERENTE">GERENTE</option>
+                        <option value="GARCOM">GARÇOM</option>
+                        <option value="COZINHA">COZINHA</option>
+                        <option value="BARMAN">BARMAN</option>
+                    </select>
+                </div>
+            </div>
 
             <div class="table-responsive">
                 <table class="tabela-estilizada">
@@ -93,6 +110,7 @@
                     <label>Nome:</label>
                     <input type="text" id="edit-nome" required>
                 </div>
+                
                 <div class="input-group">
                     <label>Cargo:</label>
                     <select id="edit-cargo">
@@ -102,6 +120,7 @@
                         <option value="BARMAN">BARMAN</option>
                     </select>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
                     <button type="submit" class="btn-salvar">Salvar Alterações</button>

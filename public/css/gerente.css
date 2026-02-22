@@ -1,64 +1,128 @@
-h2, h3{
+/* --- Títulos Estilo BK --- */
+h2, h3 {
     color: #000;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
 }
+
+/* --- Container Principal (Fundo Preto) --- */
 .card-preto {
     background-color: #000;
     border-radius: 20px;
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 30px;
     border: 1px solid #333;
 }
 
+/* Etiqueta pequena 'FUNCIONARIOS' */
 .label-titulo {
-    background: white;
-    color: black;
-    border-radius: 10px;
-    padding: 5px;
-    font-size: 14px;
+    background: #FFF;
+    color: #000;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
     margin-bottom: 15px;
-    font-weight: bold;
+    font-weight: 800;
+    display: inline-block;
 }
 
+/* --- GRID: O SEGREDO PARA FICAR LADO A LADO --- */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, 1fr); /* Divide em 4 colunas iguais */
+    gap: 12px; /* Espaçamento entre os cards brancos */
 }
 
+/* Cada quadradinho branco */
 .stat-item {
-    background: white;
-    color: black;
-    border-radius: 15px;
-    padding: 10px 5px;
+    background: #FFF;
+    color: #000;
+    border-radius: 18px;
+    padding: 15px 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    min-height: 80px;
+    transition: transform 0.2s;
 }
 
-.stat-item i { font-size: 20px; margin-bottom: 5px; }
-.stat-item .num { font-size: 18px; font-weight: bold; }
-.stat-item .cargo { font-size: 8px; font-weight: bold; }
+/* Ícone dentro do quadradinho */
+.stat-item i { 
+    font-size: 24px; 
+    margin-bottom: 5px; 
+    color: #ed7d31; 
+}
 
-/* Grid de Botões (Brancos) */
+/* Número do contador */
+.stat-item .num, #total-geral { 
+    font-size: 22px; 
+    font-weight: 900; 
+}
+
+/* Nome do cargo abaixo do número */
+.stat-item .cargo { 
+    font-size: 9px; 
+    font-weight: 700; 
+    text-transform: uppercase;
+    color: #555;
+    text-align: center;
+}
+
+/* Destaque para o primeiro item (Total Geral) */
+.stat-item#total-geral-box {
+    background-color: #6d6d6d;
+    color: #FFF;
+}
+.stat-item#total-geral-box i { color: #FFF; }
+
+/* --- GRID DE BOTÕES (ACESSO RÁPIDO) --- */
 .grid-botoes {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    grid-template-columns: 1fr 1fr; /* 2 colunas */
+    gap: 20px;
 }
 
 .btn-card {
     background-color: #FFF;
-    border: none;
-    border-radius: 20px;
-    padding: 25px 10px;
+    border: 2px solid transparent;
+    border-radius: 25px;
+    padding: 30px 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    justify-content: center;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
     cursor: pointer;
-    color: black;
+    color: #000;
+    transition: all 0.3s ease;
 }
 
-.btn-card i { font-size: 35px; margin-bottom: 15px; }
-.btn-card span { font-size: 12px; font-weight: bold; line-height: 1.2; }
+.btn-card:hover {
+    transform: translateY(-5px);
+    border-color: #ed7d31;
+    box-shadow: 0 10px 20px rgba(237, 125, 49, 0.2);
+}
+
+.btn-card i { 
+    font-size: 40px; 
+    margin-bottom: 15px; 
+    color: rgb(0, 0, 0); 
+}
+
+.btn-card span { 
+    font-size: 13px; 
+    font-weight: 900; 
+    line-height: 1.1; 
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 450px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr; /* No celular vira 2x2 para não esmagar */
+    }
+}

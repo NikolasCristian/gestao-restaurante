@@ -100,3 +100,36 @@ window.abrirModalEditar = (uid, nome, cargo) => {
 window.fecharModal = () => {
     document.getElementById('modalEditar').style.display = 'none';
 };
+
+window.filtrarTabela = () => {
+    // 1. Pega os valores dos filtros
+    const termoPesquisa = document.getElementById('inputPesquisa').value.toLowerCase();
+    const cargoSelecionado = document.getElementById('filtroCargo').value.toUpperCase();
+
+    // 2. Pega todas as linhas da tabela (exceto o cabeçalho)
+    const linhas = document.querySelectorAll('#tabela-funcionarios tr');
+    let encontrouResultados = false;
+
+    linhas.forEach(linha => {
+        // Ignora a linha de "Nenhum funcionário encontrado" se ela existir
+        if (linha.cells.length < 3) return;
+
+        const nome = linha.cells[0].textContent.toLowerCase();
+        const email = linha.cells[1].textContent.toLowerCase();
+        const cargo = linha.cells[2].textContent.toUpperCase();
+
+        // 3. Lógica de Filtro
+        const bateNomeOuEmail = nome.includes(termoPesquisa) || email.includes(termoPesquisa);
+        const bateCargo = cargoSelecionado === "" || cargo.includes(cargoSelecionado);
+
+        if (bateNomeOuEmail && bateCargo) {
+            linha.style.display = ""; // Mostra a linha
+            encontrouResultados = true;
+        } else {
+            linha.style.display = "none"; // Esconde a linha
+        }
+    });
+
+    // Opcional: Feedback se não houver resultados no filtro
+    // (Pode ser implementado com uma linha extra de aviso)
+};

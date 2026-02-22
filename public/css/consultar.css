@@ -174,3 +174,38 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
+
+.filtros-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.search-box, .filter-box {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-box i, .filter-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ed7d31; /* Cor laranja do BK */
+}
+
+.search-box input, .filter-box select {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: #ed7d31;
+    box-shadow: 0 0 5px rgba(237, 125, 49, 0.3);
+}

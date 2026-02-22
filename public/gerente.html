@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Gerente</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -63,21 +63,22 @@
 
             <div class="card-preto">
                 <div class="label-titulo">FUNCIONARIOS</div>
+
                 <div class="stats-grid">
-                    <div class="stat-item">
+                    <div class="stat-item" id="total-geral-box">
                         <i class="fas fa-user-circle"></i>
-                        <span id="total-geral">3</span>
+                        <span id="total-geral">0</span>
                     </div>
                     <div class="stat-item">
-                        <span class="num">1</span>
+                        <span class="num" id="total-garcom">0</span>
                         <span class="cargo">GARÇOM</span>
                     </div>
                     <div class="stat-item">
-                        <span class="num">1</span>
+                        <span class="num" id="total-cozinha">0</span>
                         <span class="cargo">COZINHEIRO</span>
                     </div>
                     <div class="stat-item">
-                        <span class="num">1</span>
+                        <span class="num" id="total-barman">0</span>
                         <span class="cargo">BARMAN</span>
                     </div>
                 </div>
@@ -108,6 +109,7 @@
     </main>
 
     <script src="js/estilo-padrao.js"></script>
+    <script src="js/gerente.js"></script>
 </body>
 
 </html>
