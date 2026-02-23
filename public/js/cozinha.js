@@ -120,9 +120,6 @@ function carregarPedidos() {
                         const pedido = docPed.data();
                         const pedidoId = docPed.id;
 
-                        // --- NOVA LÓGICA DE FILTRO ---
-                        // 1. Verifica se o status bate com a aba (ENVIADO/PREPARANDO)
-                        // 2. Verifica se existe pelo menos UM item que não seja bebida
                         const temComida = pedido.itens.some(item => item.categoria !== 'bebidas');
 
                         if (pedido.statusDoPedido === abaAtual && temComida) {

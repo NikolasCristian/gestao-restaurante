@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes pedidos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="config/auth.js"></script>
+    <link rel="stylesheet" href="css/cardapio.css">
+    <link rel="stylesheet" href="css/detalhes-pedido.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg" class="logo" alt="Logo">
+        </div>
+        <h2 class="label-mesa">...</h2>
+        <nav class="desktop-menu">
+            <a href="barman.html" title="Início"><i class="fas fa-close"></i></a>
+        </nav>
+    </header>
+
+    <main class="conteudo-principal">
+        <h2 class="titulo-sessao">PEDIDOS DE BEBIDAS</h2>
+
+        <div id="lista-itens-bar">
+            <p class="msg-status">Buscando bebidas...</p>
+        </div>
+    </main>
+
+    <footer class="footer-final">
+        <div class="opcoes"></div>
+    </footer>
+
+        <script src="js/produtos.js"></script>
+        <script src="js/barman-pedidos.js"></script>
+</body>
+
+</html>

@@ -185,7 +185,9 @@ async function verificarBebidasAntesDeEnviar() {
 
 async function confirmarPedidoComPreferencia() {
     const radioSelected = document.querySelector('input[name="pref-bebida"]:checked');
-    window.preferenciaBebida = radioSelected ? radioSelected.value : "Não informado";
+
+    // Captura o valor direto do HTML (EntregarComLanche ou EntregarAgora)
+    window.statusEntregaBebida = radioSelected ? radioSelected.value : "EntregarComLanche";
 
     fecharModalBebida();
     await enviarPedidoFirebase();
@@ -206,11 +208,19 @@ async function enviarPedidoFirebase() {
             quantidade: pedidoAtual[produto.id],
             precoUnitario: produto.preco,
             subtotal: produto.preco * pedidoAtual[produto.id],
-            categoria: produto.categoria,
-            observacao: produto.categoria === 'bebidas' ? (window.preferenciaBebida || "") : ""
+            categoria: produto.categoria
         }));
 
     if (itensNovos.length === 0) return;
+
+    // Lógica automática para definir o StatusDaBebida caso o modal não tenha sido aberto
+    let statusFinalBebida = "Nao se aplica";
+    const temBebida = itensNovos.some(i => i.categoria === 'bebidas');
+    
+    if (temBebida) {
+        // Se o garçom escolheu no modal, usa a escolha. Se não, e tem bebida, assume EntregarAgora
+        statusFinalBebida = window.statusEntregaBebida || "EntregarAgora";
+    }
 
     const totalPedidoAtual = itensNovos.reduce((acc, item) => acc + item.subtotal, 0);
 
@@ -218,15 +228,15 @@ async function enviarPedidoFirebase() {
         const docMesa = await mesaRef.get();
         const mesaJaOcupada = docMesa.exists && docMesa.data().status === "OCUPADA";
 
-        // 1. Salva na subcoleção de pedidos
         await subcolecaoPedidos.add({
             itens: itensNovos,
             totalDoPedido: totalPedidoAtual,
             horario: firebase.firestore.FieldValue.serverTimestamp(),
-            statusDoPedido: 'ENVIADO'
+            statusDoPedido: 'ENVIADO',
+            // O CAMPO QUE VOCÊ QUERIA:
+            StatusDaBebida: statusFinalBebida 
         });
 
-        // 2. Atualiza os dados da mesa
         const dadosUpdate = {
             valor: firebase.firestore.FieldValue.increment(totalPedidoAtual),
             status: "OCUPADA"
@@ -238,15 +248,12 @@ async function enviarPedidoFirebase() {
 
         await mesaRef.update(dadosUpdate);
 
-        // Limpa a variável global e o pedido
-        window.preferenciaBebida = null;
+        window.statusEntregaBebida = null;
         alert("Pedido enviado com sucesso!");
-
-        fecharModal();
         window.location.href = "garcom.html";
 
     } catch (error) {
-        console.error("Erro ao salvar pedido:", error);
-        alert("Erro técnico ao salvar o pedido.");
+        console.error("Erro ao salvar:", error);
+        alert("Erro técnico.");
     }
 }

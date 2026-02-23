@@ -1,140 +1,96 @@
-let abaAtual = 'ENVIADO';
-let monitoramentoModal = null; // Armazena o listener ativo do modal
+let abaAtual = 'ENVIADO'; 
+let monitoramentoModal = null; 
 
+/**
+ * 1. GERENCIAMENTO DE ABAS
+ */
 function alternarAba(status) {
-    if (status.toUpperCase() === 'PRONTOS') {
+    const statusUpper = status.toUpperCase();
+    
+    // Normalização para o Banco de Dados
+    if (statusUpper === 'PRONTOS' || statusUpper === 'PRONTO') {
         abaAtual = 'PRONTO';
-    } else {
-        abaAtual = status.toUpperCase();
-    }
-
-    document.getElementById('aba-novos').classList.toggle('active', abaAtual === 'ENVIADO');
-    document.getElementById('aba-preparo').classList.toggle('active', abaAtual === 'PREPARANDO');
-    document.getElementById('aba-prontos').classList.toggle('active', abaAtual === 'PRONTO');
-
-    carregarPedidos();
-}
-
-function alternarAba(status) {
-    // Normaliza os nomes para o padrão do Banco de Dados
-    if (status.toUpperCase() === 'PRONTOS' || status.toUpperCase() === 'PRONTO') {
-        abaAtual = 'PRONTO';
-    } else if (status.toUpperCase() === 'PREPARANDO') {
+    } else if (statusUpper === 'PREPARANDO') {
         abaAtual = 'PREPARANDO';
     } else {
         abaAtual = 'ENVIADO';
     }
 
-    // Gerenciamento visual: Remove 'active' de todos e coloca só no clicado
+    // Gerenciamento visual: Remove active de todos e coloca no atual
     document.querySelectorAll('.aba-item').forEach(btn => btn.classList.remove('active'));
+    
+    // Mapeamento de IDs (ajuste conforme seu HTML)
+    const mapaBotoes = {
+        'ENVIADO': 'aba-novos',
+        'PREPARANDO': 'aba-preparo',
+        'PRONTO': 'aba-prontos'
+    };
+    
+    const btnAtivo = document.getElementById(mapaBotoes[abaAtual]);
+    if (btnAtivo) btnAtivo.classList.add('active');
 
-    // Procura o botão correto para ativar (baseado no texto ou ID corrigido)
-    if (abaAtual === 'ENVIADO') document.getElementById('aba-novos').classList.add('active');
-    if (abaAtual === 'PREPARANDO') document.getElementById('aba-preparo').classList.add('active');
-    if (abaAtual === 'PRONTO') document.getElementById('aba-prontos').classList.add('active');
-
-    console.log("Mudando para aba:", abaAtual);
-    carregarPedidos(); // Recarrega a lista filtrando pelo novo abaAtual
+    carregarPedidos();
 }
 
+/**
+ * 2. CARREGAMENTO DE PEDIDOS (VERSÃO LEVE)
+ */
 function carregarPedidos() {
     const lista = document.getElementById('lista-pedidos');
-    lista.innerHTML = '<p class="msg-status">Buscando ' + abaAtual + '...</p>';
+    lista.innerHTML = `<p class="msg-status">Buscando ${abaAtual}...</p>`;
 
-    // snapshotMesas mantém a escuta nas mesas
-    db.collection('mesas').onSnapshot(snapshotMesas => {
-        // Importante: Não limpamos a lista aqui dentro se houver múltiplos onSnapshots ativos
-        // Mas como filtramos por status, vamos gerenciar o conteúdo:
-        let temPedidoNestaAba = false;
-
-        // Criar um container temporário ou gerenciar IDs para não duplicar
+    // Usamos collectionGroup para ouvir todos os pedidos de todas as mesas de uma vez
+    db.collectionGroup('pedidos')
+      .where("statusDoPedido", "==", abaAtual)
+      .onSnapshot(snapshot => {
         lista.innerHTML = '';
 
-        snapshotMesas.forEach(docMesa => {
-            const mesaDados = docMesa.data();
-            const mesaId = docMesa.id;
-
-            db.collection('mesas').doc(mesaId).collection('pedidos')
-                .where("statusDoPedido", "==", abaAtual) // Filtro direto do Firebase (mais rápido)
-                .onSnapshot(snapshotPedidos => {
-
-                    snapshotPedidos.forEach(docPed => {
-                        const pedido = docPed.data();
-                        const pedidoId = docPed.id;
-                        renderizarLinhaPedido(mesaDados.numero, pedido, mesaId, pedidoId);
-                        temPedidoNestaAba = true;
-                    });
-
-                    // Se após percorrer tudo não achar nada
-                    setTimeout(() => {
-                        if (!lista.querySelector('.item-pedido-lista')) {
-                            lista.innerHTML = `<h2 class="nenhum-pedido">NÃO HÁ PEDIDOS ${abaAtual}</h2>`;
-                        }
-                    }, 500);
-                });
-        });
-    });
-}
-
-function carregarPedidos() {
-    const lista = document.getElementById('lista-pedidos');
-    lista.innerHTML = '<p class="msg-status">Carregando pedidos...</p>';
-
-    db.collection('mesas').onSnapshot(snapshotMesas => {
-        lista.innerHTML = '';
-        if (snapshotMesas.empty) {
-            lista.innerHTML = '<h2 class="nenhum-pedido">NENHUM PEDIDO</h2>';
+        if (snapshot.empty) {
+            lista.innerHTML = `<h2 class="nenhum-pedido">NADA EM ${abaAtual}</h2>`;
             return;
         }
 
-        snapshotMesas.forEach(docMesa => {
-            const mesaDados = docMesa.data();
-            const mesaId = docMesa.id;
+        snapshot.forEach(docPed => {
+            const pedido = docPed.data();
+            const pedidoId = docPed.id;
+            
+            // Pega o ID da mesa subindo na árvore do banco
+            const mesaId = docPed.ref.parent.parent.id;
+            const numeroMesa = mesaId.replace('mesa-', '');
 
-            db.collection('mesas').doc(mesaId).collection('pedidos')
-                .onSnapshot(snapshotPedidos => {
-                    snapshotPedidos.forEach(docPed => {
-                        const pedido = docPed.data();
-                        const pedidoId = docPed.id;
-
-                        if (pedido.statusDoPedido === abaAtual) {
-                            renderizarLinhaPedido(mesaDados.numero, pedido, mesaId, pedidoId);
-                        }
-                    });
-
-                    setTimeout(() => {
-                        if (!lista.querySelector('.item-pedido-lista')) {
-                            lista.innerHTML = '<h2 class="nenhum-pedido">NENHUM PEDIDO</h2>';
-                        }
-                    }, 300);
-                });
+            renderizarLinhaPedido(numeroMesa, pedido, mesaId, pedidoId);
         });
     });
 }
 
+/**
+ * 3. RENDERIZAÇÃO DA LINHA
+ */
 function renderizarLinhaPedido(numeroMesa, pedido, mesaId, pedidoId) {
     const lista = document.getElementById('lista-pedidos');
     const hora = pedido.horario ? new Date(pedido.horario.toMillis()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--';
 
-    let estiloMesa = '';
-    let iconeEspecial = numeroMesa;
+    // Definição de Cores e Ícones por Status
+    let corStatus = '#bdc3c7'; // Cinza (Enviado)
+    let icone = numeroMesa;
 
     if (pedido.statusDoPedido === 'PREPARANDO') {
-        estiloMesa = 'background-color: #f1a933; color: #000;';
-    } else if (pedido.statusDoPedido === 'ENVIADO') {
-        estiloMesa = 'background-color: #e0e0e0; color: #666;';
+        corStatus = '#f1a933'; // Laranja
     } else if (pedido.statusDoPedido === 'PRONTO') {
-        estiloMesa = 'background-color: #2ecc71; color: #fff;';
-        iconeEspecial = '<i class="fas fa-bell"></i>';
+        corStatus = '#2ecc71'; // Verde
+        icone = '<i class="fas fa-check"></i>';
     }
 
     const itemHTML = `
-        <div class="item-pedido-lista" id="ped-${pedidoId}">
-            <div class="mesa-indicador" style="${estiloMesa} font-weight: bold; display: flex; align-items: center; justify-content: center;">
-                ${iconeEspecial}
+        <div class="item-pedido-lista" id="ped-${pedidoId}" style="border-left: 5px solid ${corStatus};">
+            <div class="mesa-indicador" style="background: ${corStatus}; color: white; font-weight: bold;">
+                ${icone}
+            </div>
+            <div class="info-pedido">
+                <strong>Mesa ${numeroMesa}</strong>
+                <span class="horario-pedido">${hora}</span>
             </div>
             <button class="btn-ver" onclick="abrirDetalhes('${mesaId}', '${pedidoId}', '${numeroMesa}')">VER</button>
-            <div class="horario-pedido">${hora}</div>
         </div>
     `;
 
@@ -144,51 +100,48 @@ function renderizarLinhaPedido(numeroMesa, pedido, mesaId, pedidoId) {
 }
 
 /**
- * LÓGICA DO MODAL (VISUALIZAÇÃO EM TEMPO REAL)
+ * 4. DETALHES DO PEDIDO (MODAL)
  */
 function abrirDetalhes(mesaId, pedidoId, numeroMesa) {
     const modal = document.getElementById('modal-detalhes');
     const listaContainer = document.getElementById('modal-lista-itens');
-    document.getElementById('modal-mesa-titulo').innerText = `Mesa ${numeroMesa}`;
+    document.getElementById('modal-mesa-titulo').innerText = `Pedido Mesa ${numeroMesa}`;
 
     modal.style.display = 'flex';
-    listaContainer.innerHTML = '<p class="carregando">Carregando itens...</p>';
+    listaContainer.innerHTML = '<p class="carregando">Lendo itens...</p>';
 
+    // Limpa listener anterior para não gastar dados
     if (monitoramentoModal) monitoramentoModal();
 
     monitoramentoModal = db.collection('mesas').doc(mesaId).collection('pedidos').doc(pedidoId)
         .onSnapshot(doc => {
             if (!doc.exists) return fecharModal();
 
-            const itensPedido = doc.data().itens || [];
+            const dados = doc.data();
+            const itensPedido = dados.itens || [];
 
-            // Mapeia os itens para garantir que temos todas as informações (Preço, Descrição, Imagem)
             listaContainer.innerHTML = `
-                <h3 style="margin: 0 0 15px 5px; font-weight: 900; font-size: 1.1rem;">PEDIDOS</h3>
-                ${itensPedido.map(itemPedido => {
-                // Busca os dados completos no seu array local 'alimentos' pelo nome ou id
-                const infoCompleta = alimentos.find(a => a.nome === itemPedido.nome);
+                <div class="status-badge-modal" style="background: #eee; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; margin-bottom: 15px; display: inline-block;">
+                    Status: <strong>${dados.statusDoPedido}</strong>
+                </div>
+                ${itensPedido.map(item => {
+                    // Busca no catálogo local alimentos.js
+                    const info = alimentos.find(a => a.nome === item.nome);
+                    const imagem = info ? info.img : "img/placeholder.png";
 
-                const preco = infoCompleta ? infoCompleta.preco.toFixed(2) : "0.00";
-                const descricao = infoCompleta ? infoCompleta.descricao : (itemPedido.observacao || "Sem descrição");
-                const imagem = infoCompleta ? infoCompleta.img : "img/placeholder.png";
-
-                return `
+                    return `
                         <div class="item-card-modal">
-                            <div class="item-img-container">
-                                <img src="${imagem}" onerror="this.onerror=null;this.src='https://placehold.co/100x100?text=Lanche';">
-                            </div>
+                            <img src="${imagem}" onerror="this.src='img/placeholder.png'">
                             <div class="item-info">
-                                <h4>${itemPedido.nome}</h4>
-                                <p class="item-obs">${descricao}</p>
-                                <div class="item-price-row">
-                                    <span class="item-price">R$ ${preco}</span>
-                                    <span class="item-qtd-badge">${itemPedido.quantidade}</span>
+                                <h4>${item.nome}</h4>
+                                <p>${item.observacao || "Sem observações"}</p>
+                                <div class="item-meta">
+                                    <span>Qtd: <strong>${item.quantidade}</strong></span>
                                 </div>
                             </div>
                         </div>
                     `;
-            }).join('')}
+                }).join('')}
             `;
         });
 }
@@ -196,9 +149,10 @@ function abrirDetalhes(mesaId, pedidoId, numeroMesa) {
 function fecharModal() {
     document.getElementById('modal-detalhes').style.display = 'none';
     if (monitoramentoModal) {
-        monitoramentoModal(); // Para de gastar dados do Firebase ao fechar
+        monitoramentoModal(); // Unsubscribe
         monitoramentoModal = null;
     }
 }
-// Inicia
-carregarPedidos();
+
+// Inicia na aba de Novos
+document.addEventListener('DOMContentLoaded', () => alternarAba('ENVIADO'));

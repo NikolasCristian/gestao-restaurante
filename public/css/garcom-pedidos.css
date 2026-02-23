@@ -269,3 +269,128 @@ body { background-color: #e0e0e0; font-family: sans-serif; margin: 0; }
     background: #bbb;
     border-radius: 10px;
 }
+
+/* 1. CONTAINER DO MODAL (Fundo escuro/Overlay) */
+#modal-detalhes {
+    display: none; /* Começa escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+/* 2. CAIXA DO CONTEÚDO (O Modal em si) */
+.box2 {
+    background-color: #e0e0e0;
+    width: 95%; /* Quase toda a largura em telas pequenas */
+    max-width: 380px; /* Largura ideal para celulares */
+    max-height: 85vh; /* Evita que o modal saia da tela verticalmente */
+    border-radius: 30px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    position: relative;
+    animation: zoomIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* 3. CABEÇALHO DO MODAL */
+.box2 header {
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box2 header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 4. CORPO DO MODAL (Onde ficam os itens) */
+#modal-lista-itens {
+    padding: 15px;
+    overflow-y: auto;
+    flex-grow: 1; /* Faz o corpo ocupar o espaço disponível */
+    background-color: #e0e0e0;
+}
+
+/* 5. CARDS DOS ITENS (Brancos) */
+.item-card-modal {
+    background-color: #fff;
+    border-radius: 18px;
+    display: flex;
+    padding: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    border: 1px solid #d0d0d0;
+}
+
+.item-img-container {
+    width: 65px;
+    height: 65px;
+    min-width: 65px;
+    border-radius: 12px;
+    margin-right: 12px;
+}
+
+.item-info h4 {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+}
+
+/* 6. BOTÕES INFERIORES (ÁREA DE AÇÃO) */
+.modal-footer {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #e0e0e0;
+}
+
+/* Botão Verde de Entregar */
+.btn-entregar-modal {
+    background-color: #6eff9d; /* Verde limão igual ao seu botão VER */
+    color: #000;
+    border: none;
+    padding: 18px;
+    border-radius: 15px;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #4ec97a;
+}
+
+/* Botão Fechar */
+.btn-fechar-modal {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 40px;
+    font-weight: 900;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* Ajuste da barra de rolagem */
+#modal-lista-itens::-webkit-scrollbar { width: 4px; }
+#modal-lista-itens::-webkit-scrollbar-thumb { background: #000; border-radius: 10px; }

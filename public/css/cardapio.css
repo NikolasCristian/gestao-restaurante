@@ -399,6 +399,8 @@ main {
     padding: 20px 20px 40px 20px; /* Padding extra para iPhones/Androids com barra inferior */
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 15px;
 }
 
