@@ -193,7 +193,7 @@ async function confirmarPedidoComPreferencia() {
     await enviarPedidoFirebase();
 }
 
-// --- FUNÇÃO DE ENVIO PARA FIREBASE ---
+// --- FUNÇÃO DE ENVIO PARA FIREBASE (MODIFICADA PARA SEPARAR PEDIDOS) ---
 
 async function enviarPedidoFirebase() {
     const mesaTexto = document.getElementById('numero-mesa').innerText;
@@ -228,15 +228,52 @@ async function enviarPedidoFirebase() {
         const docMesa = await mesaRef.get();
         const mesaJaOcupada = docMesa.exists && docMesa.data().status === "OCUPADA";
 
-        await subcolecaoPedidos.add({
-            itens: itensNovos,
-            totalDoPedido: totalPedidoAtual,
-            horario: firebase.firestore.FieldValue.serverTimestamp(),
-            statusDoPedido: 'ENVIADO',
-            // O CAMPO QUE VOCÊ QUERIA:
-            StatusDaBebida: statusFinalBebida 
-        });
+        // LÓGICA CORRIGIDA: 
+        // Se for "EntregarAgora" -> SEPARA os pedidos (bebida em um, comida em outro)
+        // Se for "EntregarComLanche" -> JUNTA tudo no mesmo pedido
+        if (statusFinalBebida === "EntregarAgora") {
+            // SEPARA: Cria pedidos diferentes para comida e bebida
+            const itensComida = itensNovos.filter(item => item.categoria !== 'bebidas');
+            const itensBebida = itensNovos.filter(item => item.categoria === 'bebidas');
 
+            // Se tem comida, cria pedido de comida (vai para a cozinha)
+            if (itensComida.length > 0) {
+                const totalComida = itensComida.reduce((acc, item) => acc + item.subtotal, 0);
+                await subcolecaoPedidos.add({
+                    itens: itensComida,
+                    totalDoPedido: totalComida,
+                    horario: firebase.firestore.FieldValue.serverTimestamp(),
+                    statusDoPedido: 'ENVIADO',
+                    StatusDaBebida: "Nao se aplica", // Comida não tem status de bebida
+                    tipo: "comida"
+                });
+            }
+
+            // Se tem bebida, cria pedido de bebida separado (vai para o bar)
+            if (itensBebida.length > 0) {
+                const totalBebida = itensBebida.reduce((acc, item) => acc + item.subtotal, 0);
+                await subcolecaoPedidos.add({
+                    itens: itensBebida,
+                    totalDoPedido: totalBebida,
+                    horario: firebase.firestore.FieldValue.serverTimestamp(),
+                    statusDoPedido: 'ENVIADO',
+                    StatusDaBebida: "EntregarAgora", // Bebida vai agora
+                    tipo: "bebida"
+                });
+            }
+        } else {
+            // Comportamento para "EntregarComLanche": TUDO JUNTO em um único pedido
+            await subcolecaoPedidos.add({
+                itens: itensNovos,
+                totalDoPedido: totalPedidoAtual,
+                horario: firebase.firestore.FieldValue.serverTimestamp(),
+                statusDoPedido: 'ENVIADO',
+                StatusDaBebida: "EntregarComLanche", // Bebida vai junto com o lanche
+                tipo: "completo"
+            });
+        }
+
+        // Atualiza a mesa (valor total e status)
         const dadosUpdate = {
             valor: firebase.firestore.FieldValue.increment(totalPedidoAtual),
             status: "OCUPADA"
@@ -248,8 +285,13 @@ async function enviarPedidoFirebase() {
 
         await mesaRef.update(dadosUpdate);
 
+        // Limpa variáveis globais
         window.statusEntregaBebida = null;
-        alert("Pedido enviado com sucesso!");
+        
+        // Limpa o carrinho atual
+        Object.keys(pedidoAtual).forEach(key => pedidoAtual[key] = 0);
+        
+        alert("Pedido(s) enviado(s) com sucesso!");
         window.location.href = "garcom.html";
 
     } catch (error) {
