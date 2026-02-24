@@ -37,7 +37,7 @@ function alternarAba(status) {
  */
 function carregarPedidos() {
     const lista = document.getElementById('lista-pedidos');
-    lista.innerHTML = `<p class="msg-status">Buscando ${abaAtual}...</p>`;
+    lista.innerHTML = `<p class="msg-status" style="color: #000; text-align: center">Buscando ${abaAtual}...</p>`;
 
     if (abaAtual === 'PRONTO') {
         carregarPedidosProntosAgrupados();

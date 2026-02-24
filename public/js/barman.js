@@ -45,9 +45,9 @@ function carregarPedidos() {
                 p.StatusDaBebida === "Entregue"
             );
         } else {
-            // Mostra os dois status na mesma aba de Pendentes
+            // CORREÇÃO: Parênteses ajustados para filtrar corretamente
             pedidosFiltrados = todosOsPedidos.filter(p =>
-                (p.statusDoPedido === "FALTAoREFRI") || (p.statusDoPedido === "ENVIADO") &&
+                (p.statusDoPedido === "FALTAoREFRI" || p.statusDoPedido === "ENVIADO") &&
                 p.StatusDaBebida === "EntregarAgora"
             );
         }
@@ -76,6 +76,9 @@ function renderizarLinhaPedido(mesaId, pedido, pedidoId) {
     // Verifica se é sem mesa
     const isSemMesa = mesaId === 'sem-mesa';
     
+    // Formata o horário
+    const hora = pedido.horario ? new Date(pedido.horario.toMillis()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--';
+    
     // Define o conteúdo do indicador
     let indicadorConteudo = '';
     if (isSemMesa) {
@@ -87,12 +90,16 @@ function renderizarLinhaPedido(mesaId, pedido, pedidoId) {
         indicadorConteudo = numeroMesa;
     }
 
+    // Pega o nome do cliente se for sem mesa
+    const nomeCliente = isSemMesa ? (pedido.nomeCliente || 'Cliente') : '';
+
     const itemHTML = `
         <div class="item-pedido-lista" id="ped-${pedidoId}" style="border-left: 6px solid ${corPadrao}; margin-bottom: 10px;">
             <div class="mesa-indicador" style="background:${corPadrao}; color:white; display: flex; align-items: center; justify-content: center;">
                 ${indicadorConteudo}
             </div>
             <button class="btn-ver" onclick="abrirDetalhesBarman('${mesaId}', '${pedidoId}')">VER</button>
+            <div class="horario-pedido">${hora}</div>
         </div>
     `;
     lista.innerHTML += itemHTML;
@@ -102,4 +109,5 @@ function abrirDetalhesBarman(mesaId, pedidoId) {
     window.location.href = `barman-pedidos.html?mesa=${mesaId}&pedido=${pedidoId}`;
 }
 
+// Inicializa a página
 carregarPedidos();

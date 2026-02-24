@@ -4,15 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Garçom</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <title>Painel do Gerente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="config/auth.js"></script>
     <link rel="stylesheet" href="css/estilo-padrao.css">
-    <link rel="stylesheet" href="css/garcom.css">
+    <link rel="stylesheet" href="css/cozinha.css">
+    <link rel="stylesheet" href="css/pagamento.css">
 </head>
 
 <body>
@@ -24,8 +26,6 @@
 
         <nav class="desktop-menu">
             <a href="garcom.html" title="Início"><i class="fas fa-home"></i></a>
-            <a href="garcom-pedidos.html" title="Início"><i class="fas fa-clipboard-list"></i></a>
-            <a href="pagamento.html" title="Início"><i class="fas fa-clipboard-list"></i></a>
             <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
         </nav>
 
@@ -38,14 +38,12 @@
 
     <div id="side-menu" class="side-menu">
         <div class="menu-header">
-            <span>MENU GARÇOM</span>
+            <span>MENU BARMAN</span>
             <button onclick="toggleMenu()" class="close-btn">&times;</button>
         </div>
 
         <nav class="menu-links">
             <a href="garcom.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
-            <a href="garcom-pedidos.html" title="Início"><i class="fas fa-clipboard-list"></i>PEDIDOS</a>
-            <a href="pagamento.html" title="Início"><i class="fas fa-money"></i>PAGAMENTO</a>
         </nav>
 
         <button onclick="logout()" class="logout-btn">
@@ -53,36 +51,20 @@
         </button>
     </div>
 
-    <main class="container">
-        <section class="secao-mesas">
-            <h2 class="titulo-sessao">Mapa das mesas</h2>
+    <main class="conteudo-principal">
+        <h2 class="titulo-painel">PAGAMENTOS</h2>
 
-            <div class="filtros-mesas">
-                <input type="text" id="buscaMesa" placeholder="PESQUISAR..." onkeyup="filtrarMesas()">
-                <select id="filtroStatus" onchange="filtrarMesas()">
-                    <option value="TODAS">TODAS</option>
-                    <option value="LIVRE">LIVRE</option>
-                    <option value="OCUPADA">OCUPADA</option>
-                </select>
-            </div>
+        <div class="abas-navegacao">
+            <button id="aba-novos" class="aba-item active" onclick="alternarAba('PENDENTES')">PENDENTES</button>
+            <button id="aba-preparo" class="aba-item" onclick="alternarAba('PAGOS')">PAGOS</button>
+        </div>
 
-            <div class="grid-mesas" id="container-mesas">
-                
-            </div>
-
-            <div class="pedido-sem-mesa">
-                <button class="btn-sem-mesa">
-                    <span>PEDIDO SEM MESA</span>
-                    <i class="fas fa-bell-concierge"></i>
-                </button>
-            </div>
-        </section>
+        <div id="lista-pedidos" class="lista-pedidos">
+        </div>
     </main>
 
     <script src="js/estilo-padrao.js"></script>
-    <script src="js/garcom.js"></script>
-    <script src="js/produtos.js"></script>
-    <script src="notificacao/NotificacaoGarcom.js"></script>
+    <script src="js/pagamento.js"></script>
 </body>
 
 </html>

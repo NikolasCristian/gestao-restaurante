@@ -1,5 +1,12 @@
-body { background-color: #e0e0e0; font-family: sans-serif; margin: 0; }
 
+/* ESTILOS GERAIS */
+body {
+    background-color: #e0e0e0;
+    font-family: sans-serif;
+    margin: 0;
+}
+
+/* HEADER DO PAINEL */
 .header-painel {
     background-color: #000;
     color: #fff;
@@ -9,12 +16,6 @@ body { background-color: #e0e0e0; font-family: sans-serif; margin: 0; }
     align-items: center;
 }
 
-.nenhum-pedido{
-    color: #aaaaaa;
-    text-align: center;
-    font-size: 15px;
-}
-
 .logo-circulo {
     width: 40px;
     height: 40px;
@@ -22,31 +23,37 @@ body { background-color: #e0e0e0; font-family: sans-serif; margin: 0; }
     border-radius: 50%;
 }
 
+/* TÍTULOS */
 .titulo-painel {
-    text-align: left;
-    padding-left: 20px;
+    text-align: center;
     font-size: 18px;
     font-weight: 900;
     margin: 20px 0 10px 0;
     color: #000;
 }
 
+/* ABAS DE NAVEGAÇÃO */
 .abas-navegacao {
     display: flex;
     gap: 10px;
     padding: 0 20px;
     margin-bottom: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .aba-item {
     flex: 1;
     border: none;
-    padding: 10px;
-    border-radius: 20px;
+    padding: 12px;
+    border-radius: 25px;
     font-weight: bold;
+    font-size: 16px;
     cursor: pointer;
     background: #fff;
     color: #000;
+    transition: all 0.2s;
 }
 
 .aba-item.active {
@@ -54,110 +61,494 @@ body { background-color: #e0e0e0; font-family: sans-serif; margin: 0; }
     color: #fff;
 }
 
+/* LISTA DE PEDIDOS */
 .lista-pedidos {
     padding: 0 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* O CARD DA LISTA IGUAL À FOTO */
+.nenhum-pedido {
+    color: #aaaaaa;
+    text-align: center;
+    font-size: 15px;
+    padding: 40px 0;
+}
+
+.msg-status {
+    color: #000;
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* CARD DE PEDIDO NA LISTA PRINCIPAL */
 .item-pedido-lista {
     background: #fff;
     border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 10px;
 }
 
 .mesa-indicador {
     background: #d9d9d9;
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
+    width: 65px;
+    height: 65px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 900;
+    flex-shrink: 0;
+}
+
+.info-pedido {
+    flex: 1;
+    margin: 0 10px;
+    min-width: 0; /* Permite que o texto quebre */
+}
+
+.info-pedido strong {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.info-pedido span {
+    font-size: 14px;
+    color: #666;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .btn-ver {
-    background: #6eff9d; /* Verde limão da foto */
+    background: #6eff9d;
     border: none;
-    width: 120px;
-    height: 50px;
-    border-radius: 12px;
-    font-size: 22px;
+    min-width: 300px;
+    height: 55px;
+    padding: 0 20px;
+    border-radius: 15px;
+    font-size: 20px;
     font-weight: 900;
     cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 4px 0 #4ec97a;
+}
+
+.btn-ver:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #4ec97a;
 }
 
 .horario-pedido {
     font-weight: 900;
     font-size: 16px;
+    color: #000;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ===== MODAL ===== */
+/* Container do Modal (Overlay) */
+#modal-detalhes {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* Caixa do Modal */
+.box2 {
+    background-color: #e0e0e0;
+    width: 100%;
+    max-width: 400px;
+    max-height: 85vh;
+    border-radius: 30px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.25s ease-out;
+    margin: 0 auto;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Cabeçalho do Modal */
+.box2 header {
+    background-color: #000;
+    color: #fff;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box2 header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 900;
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding-right: 10px;
+}
+
+.box2 header button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 5px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.box2 header button:active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Corpo do Modal */
+#modal-lista-itens {
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Título dentro do modal */
+#modal-lista-itens h3 {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1.2rem;
+    margin: 0 0 15px 0;
     color: #000;
 }
 
-.msg-status{
+/* Cards de Itens */
+.item-card-modal {
+    background-color: #fff;
+    border-radius: 18px;
+    display: flex;
+    padding: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.item-img-container {
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-right: 15px;
+    background-color: #f5f5f5;
+}
+
+.item-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-info h4 {
+    margin: 0 0 3px 0;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 0.95rem;
     color: #000;
-    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-
-/* Responsividade para telas pequenas */
-@media (max-width: 480px) {
-
-    .btn-ver {
-        min-width: 85px;
-        height: 50px;
-        font-size: 18px;
-        padding: 0 15px;
-    }
+.item-obs {
+    margin: 0 0 5px 0;
+    font-size: 0.75rem;
+    color: #666;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
+/* Preço e Quantidade */
+.item-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-price {
+    font-weight: 900;
+    font-size: 0.9rem;
+    color: #000;
+    white-space: nowrap;
+}
+
+.item-qtd-badge {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 3px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+/* Status Enviados/Preparando */
+.status-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.status-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.status-badge {
+    background: #000;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.status-badge-green {
+    background: #6eff9d;
+    color: #000;
+    padding: 5px 20px;
+    border-radius: 15px;
+    font-weight: 900;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.btn-ver-status {
+    background: #6eff9d;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 900;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #4ec97a;
+    transition: transform 0.1s;
+    white-space: nowrap;
+}
+
+.btn-ver-status:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 #4ec97a;
+}
+
+/* Botão Fechar Inferior */
+.box2 > button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    margin: 0 20px 20px 20px;
+    padding: 15px;
+    border-radius: 40px;
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: transform 0.1s;
+    width: auto;
+}
+
+.box2 > button:active {
+    transform: scale(0.95);
+}
+
+/* Total de Itens */
+.TOTAL-ITENS {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* Botão Verde de Entregar */
+.btn-entregar-modal {
+    background-color: #6eff9d;
+    color: #000;
+    border: none;
+    padding: 18px;
+    border-radius: 15px;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #4ec97a;
+    margin: 0 20px 10px 20px;
+    transition: transform 0.1s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-entregar-modal:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #4ec97a;
+}
+
+/* Barra de Rolagem Personalizada */
+#modal-lista-itens::-webkit-scrollbar {
+    width: 4px;
+}
+
+#modal-lista-itens::-webkit-scrollbar-track {
+    background: #d0d0d0;
+}
+
+#modal-lista-itens::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 10px;
+}
+
+/* ===== MEDIA QUERIES ===== */
 @media (max-width: 607px) {
-    .item-pedido-lista {
-        gap: 5px;
-    }
-    .btn-ver {
-        min-width: 300px;
-    }
-}
-
-@media (max-width: 569px) {
-    .btn-ver {
-        min-width: 250px;
-    }
-}
-@media (max-width: 569) {
-    .btn-ver {
-        min-width: 300px;
-    }
-}
-
-@media (max-width: 547px) {
     .btn-ver {
         min-width: 200px;
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 569px) {
+    .btn-ver {
+        min-width: 180px;
+    }
+}
+
+@media (max-width: 547px) {
     .btn-ver {
         min-width: 160px;
     }
 }
 
+@media (max-width: 500px) {
+    .btn-ver {
+        min-width: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mesa-indicador {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+    
+    .btn-ver {
+        min-width: 120px;
+        height: 50px;
+        font-size: 18px;
+        padding: 0 12px;
+    }
+    
+    .info-pedido strong {
+        font-size: 16px;
+    }
+}
+
 @media (max-width: 451px) {
     .btn-ver {
-        margin-left: 40px;
-        min-width: 120px;
+        min-width: 110px;
+        margin-left: 5px;
+    }
+    
+    .horario-pedido {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 414px) {
+    .btn-ver {
+        min-width: 100px;
     }
 }
 
 @media (max-width: 389px) {
-
     .abas-navegacao {
         max-width: 300px;
         flex-direction: column;
@@ -169,19 +560,63 @@ body { background-color: #e0e0e0; font-family: sans-serif; margin: 0; }
         padding: 10px;
         font-size: 14px;
     }
-    .btn-ver {
+    
+    .item-pedido-lista {
+        gap: 8px;
+        padding: 10px;
+    }
+    
+    .mesa-indicador {
         width: 50px;
-        margin-left: 10px;
-        margin-right: -5px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .info-pedido {
+        margin: 0 8px;
+    }
+    
+    .info-pedido strong {
+        font-size: 14px;
+    }
+    
+    .btn-ver {
+        min-width: 90px;
+        padding: 0 8px;
+        font-size: 16px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .horario-pedido {
+        font-size: 12px;
     }
 }
+
 @media (max-width: 327px) {
     .item-pedido-lista {
-        display: flex;
         flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
     }
+    
+    .mesa-indicador {
+        margin: 0 auto;
+    }
+    
+    .info-pedido {
+        text-align: center;
+        margin: 5px 0;
+    }
+    
     .btn-ver {
         width: 100%;
-        margin: 0;
+        min-width: 100%;
+        margin: 5px 0;
+    }
+    
+    .horario-pedido {
+        text-align: center;
+        width: 100%;
     }
 }

@@ -22,7 +22,7 @@ const db = firebase.firestore();
 // 1. CONFIGURAÇÃO DE PERMISSÕES
 const permissoes = {
     'GERENTE': ['gerente.html', 'cadastrar-funcionario.html', 'consultar-funcionario.html', 'mesas.html', 'sem-mesas.html'],
-    'GARCOM': ['garcom.html', 'cardapio.html', 'garcom-pedidos.html', 'cozinha.html', 'detalhes-pedido.html', 'barman.html', 'barman-pedidos.html', 'gerente.html', 'mesas.html', 'cardapio-sem-mesa.html', 'sem-mesas.html', 'detalhes-pedido-sem-mesa.html'],
+    'GARCOM': ['garcom.html', 'cardapio.html', 'garcom-pedidos.html', 'cozinha.html', 'detalhes-pedido.html', 'barman.html', 'barman-pedidos.html', 'gerente.html', 'mesas.html', 'cardapio-sem-mesa.html', 'sem-mesas.html', 'detalhes-pedido-sem-mesa.html', 'pagamento.html'],
     'COZINHA': ['cozinha.html', 'detalhes-pedido.html'],
     'BARMAN': ['barman.html', 'barman-pedidos.html']
 };
