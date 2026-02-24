@@ -22,12 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Escuta a coleção de mesas em tempo real
     db.collection('mesas').orderBy('numero', 'asc').onSnapshot((snapshot) => {
-        containerMesas.innerHTML = ''; 
+        containerMesas.innerHTML = '';
 
         snapshot.forEach((doc) => {
             const mesa = doc.data();
             const divMesa = document.createElement('div');
-            
+
             // Define a classe de status para o CSS
             const statusClasse = mesa.status === 'OCUPADA' ? 'ocupada' : 'livre';
             divMesa.className = `card-mesa ${statusClasse}`;
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // Calcula os minutos passados desde o primeiro pedido
                 const minutosPassados = calcularMinutos(mesa.horario_inicio);
-                
+
                 // Formata o valor monetário
                 const valorFormatado = mesa.valor ? mesa.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'R$ 0,00';
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             containerMesas.appendChild(divMesa);
         });
-        
+
         // Re-aplica o filtro de busca caso o usuário esteja digitando enquanto o Firebase atualiza
         filtrarMesas();
     });
@@ -121,3 +121,12 @@ setInterval(() => {
         }
     });
 }, 60000); // 60.000ms = 1 minuto
+
+// Lógica para o botão "PEDIDO SEM MESA"
+const btnSemMesa = document.querySelector('.btn-sem-mesa');
+if (btnSemMesa) {
+    btnSemMesa.onclick = () => {
+        // Redireciona para o cardápio com um identificador de pedido avulso
+        window.location.href = 'cardapio-sem-mesa.html';
+    };
+}

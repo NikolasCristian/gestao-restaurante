@@ -126,3 +126,135 @@ h2, h3{
     transform: scale(1.2);
     background: #cc0000;
 }
+
+/* Adicione ao seu arquivo gerente-mesas.css */
+
+.stats-grid-mesas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    padding: 15px;
+}
+
+.card-pedido-simples {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.card-pedido-simples:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.pedido-info {
+    flex: 1;
+}
+
+.pedido-nome {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.pedido-nome i {
+    color: #2ecc71;
+    width: 20px;
+}
+
+.pedido-nome strong {
+    font-size: 1rem;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.pedido-horario {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.pedido-horario i {
+    width: 20px;
+    color: #000;
+}
+
+.btn-ver-pedido {
+    background: #6eff9d;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 900;
+    font-size: 0.9rem;
+    cursor: pointer;
+    min-width: 70px;
+}
+
+.btn-ver-pedido:hover {
+    opacity: 0.8;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #e0e0e0;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 30px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: zoomIn 0.25s ease-out;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Scrollbar personalizada */
+.modal-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #d0d0d0;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 10px;
+}
+
+.carregando {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.nome, #modal-titulo{
+    color: #000;
+}

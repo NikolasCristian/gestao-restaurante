@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Garçom</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="config/auth.js"></script>
+    <link rel="stylesheet" href="css/estilo-padrao.css">
+
+    <link rel="stylesheet" href="css/gerente-mesas.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg" class="logo" alt="Logo">
+        </div>
+
+        <nav class="desktop-menu">
+            <a href="gerente.html" title="Início"><i class="fas fa-home"></i></a>
+            <a href="cadastrar-funcionario.html" title="Cadastrar Funcionário"><i class="fas fa-user-plus"></i></a>
+            <a href="consultar-funcionario.html" title="Consultar"><i class="fas fa-search"></i></a>
+            <a href="vendas.html" title="Vendas"><i class="fas fa-chart-line"></i></a>
+            <a href="historico.html" title="Histórico"><i class="fas fa-history"></i></a>
+            <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
+        </nav>
+
+        <button class="menu-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+    <div id="side-menu" class="side-menu">
+        <div class="menu-header">
+            <span>MENU GERENTE</span>
+            <button onclick="toggleMenu()" class="close-btn">&times;</button>
+        </div>
+
+        <nav class="menu-links">
+            <a href="gerente.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
+            <a href="cadastrar-funcionario.html"><i class="fas fa-user-plus"></i> CADASTRAR FUNCIONÁRIO</a>
+            <a href="consultar-funcionario.html"><i class="fas fa-search"></i> CONSULTAR FUNCIONÁRIO</a>
+            <a href="vendas.html"><i class="fas fa-chart-line"></i> VENDAS</a>
+            <a href="historico.html"><i class="fas fa-history"></i> HISTÓRICO DE PAGAMENTOS</a>
+        </nav>
+
+        <button onclick="logout()" class="logout-btn">
+            <i class="fas fa-power-off"></i> SAIR DO SISTEMA
+        </button>
+    </div>
+
+    <main class="container">
+        <section class="card-admin">
+            <div class="header-sessao">
+                <h2>GERENCIAR PEDIDOS SEM MESA</h2>
+            </div>
+
+            <div class="card-preto">
+                <form id="form-add-mesa" class="form-horizontal">
+                    <div class="input-field">
+                        <i class="fas fa-search"></i> <!-- Mudei de hashatag para search -->
+                        <input type="text" id="num-mesa" placeholder="Buscar por nome do cliente ou horário (ex: 14:30)"
+                            required>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="lista-mesas">
+            <div class="header-sessao">
+                <h3></i> PEDIDOS NO SISTEMA</h3>
+            </div>
+            <div id="grid-lista-mesas" class="stats-grid-mesas">
+            </div>
+        </section>
+    </main>
+
+    <script src="js/estilo-padrao.js"></script>
+    <script src="js/produtos.js"></script>
+    <script src="js/gerente-sem-mesa.js"></script>
+</body>
+
+</html>
