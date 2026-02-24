@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </span>
                     </div>
                     <div class="icon-area">
-                        <i class="fas fa-table"></i>
+                        <i class="fas fa-utensils"></i>
                     </div>
                 `;
             } else {
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="icon-area">
-                        <i class="fas fa-table"></i>
+                        <i class="fas fa-utensils" ></i>
                     </div>
                 `;
             }

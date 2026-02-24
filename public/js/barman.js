@@ -3,17 +3,17 @@ let abaAtual = 'ENVIADO';
 function alternarAba(status) {
     abaAtual = status.toUpperCase();
     
-    // 1. Limpa a classe active de todos os botões (Usando .aba-item que está no seu HTML)
+    // 1. Limpa a classe active de todos os botões
     document.querySelectorAll('.aba-item').forEach(btn => {
         btn.classList.remove('active');
     });
     
-    // 2. Mapeia o status para os IDs que você criou no seu HTML
+    // 2. Mapeia o status para os IDs
     let idParaAtivar = '';
     if (abaAtual === 'PRONTO') {
-        idParaAtivar = 'aba-preparo'; // ID do seu segundo botão
+        idParaAtivar = 'aba-preparo';
     } else {
-        idParaAtivar = 'aba-novos';   // ID do seu primeiro botão
+        idParaAtivar = 'aba-novos';
     }
 
     // 3. Aplica a classe active no botão correto
@@ -71,13 +71,26 @@ function renderizarLinhaPedido(mesaId, pedido, pedidoId) {
     const lista = document.getElementById('lista-pedidos');
 
     // Cor padrão: Azul para Pendentes, Verde para Pronto
-    const corPadrao = (abaAtual === 'PRONTO') ? '#2ecc71' : '#3498db';
-    const numeroMesa = mesaId.replace('mesa-', '');
+    const corPadrao = (abaAtual === 'PRONTO') ? '#2ecc71' : '#b7b7b7';
+    
+    // Verifica se é sem mesa
+    const isSemMesa = mesaId === 'sem-mesa';
+    
+    // Define o conteúdo do indicador
+    let indicadorConteudo = '';
+    if (isSemMesa) {
+        // Para sem mesa, mostra o ícone de sino
+        indicadorConteudo = '<i class="fas fa-concierge-bell"></i>';
+    } else {
+        // Para mesas normais, mostra o número da mesa
+        const numeroMesa = mesaId.replace('mesa-', '');
+        indicadorConteudo = numeroMesa;
+    }
 
     const itemHTML = `
         <div class="item-pedido-lista" id="ped-${pedidoId}" style="border-left: 6px solid ${corPadrao}; margin-bottom: 10px;">
-            <div class="mesa-indicador" style="background:${corPadrao}; color:white;">
-                ${numeroMesa}
+            <div class="mesa-indicador" style="background:${corPadrao}; color:white; display: flex; align-items: center; justify-content: center;">
+                ${indicadorConteudo}
             </div>
             <button class="btn-ver" onclick="abrirDetalhesBarman('${mesaId}', '${pedidoId}')">VER</button>
         </div>

@@ -1,6 +1,9 @@
 // Objeto global para armazenar as quantidades selecionadas { id: quantidade }
 const pedidoAtual = {};
 
+// Flag para controlar processamento
+let processandoPedido = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Captura o número da mesa vindo da URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -76,6 +79,17 @@ function atualizarTotal() {
 }
 
 function irParaRevisao() {
+    // Verifica se já está processando
+    if (processandoPedido) return;
+    
+    // Verifica se tem itens no pedido
+    const temItens = Object.values(pedidoAtual).some(qtd => qtd > 0);
+    
+    if (!temItens) {
+        alert("❌ Selecione pelo menos um item!");
+        return;
+    }
+
     const modal = document.getElementById('modal-revisao');
     const listaRevisao = document.getElementById('lista-revisao');
     const totalModal = document.getElementById('total-modal');
@@ -85,34 +99,27 @@ function irParaRevisao() {
     listaRevisao.innerHTML = '';
 
     let totalGeral = 0;
-    let temItens = false;
 
     alimentos.forEach(produto => {
         const qtd = pedidoAtual[produto.id] || 0;
         if (qtd > 0) {
-            temItens = true;
             const subtotal = produto.preco * qtd;
             totalGeral += subtotal;
 
             listaRevisao.innerHTML += `
-                <div class="card-produto-revisao" style="display: flex; align-items: center; background: #fff; padding: 10px; border-radius: 12px; margin-bottom: 10px;">
+                <div class="card-produto-revisao" style="display: flex; align-items: center; background: #ffffff; padding: 10px; border-radius: 12px; margin-bottom: 10px;">
                     <img src="${produto.img}" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover;">
                     <div style="flex: 1; margin-left: 15px;">
                         <h4 style="font-family: 'Arial Black'; font-size: 14px; margin: 0;">${produto.nome}</h4>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
                             <span style="font-weight: 900;">R$ ${subtotal.toFixed(2).replace('.', ',')}</span>
-                            <span style="background: #000; color: #fff; padding: 2px 10px; border-radius: 20px; font-size: 12px;">${qtd}x</span>
+                            <span style="background: #d6d6d6; color: #000000; padding: 2px 10px; border-radius: 20px; font-size: 12px;">${qtd}x</span>
                         </div>
                     </div>
                 </div>
             `;
         }
     });
-
-    if (!temItens) {
-        alert("Selecione pelo menos um item!");
-        return;
-    }
 
     totalModal.innerText = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
     modal.style.display = 'flex';
@@ -129,13 +136,24 @@ function fecharModalBebida() {
 }
 
 async function verificarBebidasAntesDeEnviar() {
-    // 1. Verifica se há bebidas no pedido ATUAL que está sendo feito agora
+    // Verifica se já está processando
+    if (processandoPedido) return;
+    
+    // Verifica se tem itens no pedido
+    const temItens = Object.values(pedidoAtual).some(qtd => qtd > 0);
+    
+    if (!temItens) {
+        alert("❌ Selecione pelo menos um item!");
+        return;
+    }
+    
+    // 1. Verifica se há bebidas no pedido ATUAL
     const temBebidaNoPedidoAtual = alimentos.some(p => pedidoAtual[p.id] > 0 && p.categoria === 'bebidas');
 
-    // 2. Verifica se há comida (lanche/pizza) no pedido ATUAL
+    // 2. Verifica se há comida no pedido ATUAL
     const temComidaNoPedidoAtual = alimentos.some(p => pedidoAtual[p.id] > 0 && p.categoria !== 'bebidas');
 
-    // Se não tem bebida nenhuma sendo pedida agora, envia direto (comida pura)
+    // Se não tem bebida, envia direto
     if (!temBebidaNoPedidoAtual) {
         await enviarPedidoFirebase();
         return;
@@ -147,13 +165,12 @@ async function verificarBebidasAntesDeEnviar() {
         return;
     }
 
-    // Se só tem bebida no carrinho atual, precisamos checar se a mesa JÁ TEM lanche sendo feito na cozinha
+    // Se só tem bebida no carrinho atual, verifica se a mesa já tem lanche
     try {
         const mesaTexto = document.getElementById('numero-mesa').innerText;
         const numeroMesa = mesaTexto.replace('Mesa ', '').trim();
         const mesaRef = db.collection("mesas").doc(`mesa-${numeroMesa}`);
 
-        // Busca todos os pedidos dessa mesa que ainda não foram finalizados
         const snapshot = await mesaRef.collection("pedidos")
             .where("statusDoPedido", "in", ["ENVIADO", "PREPARANDO"])
             .get();
@@ -162,40 +179,68 @@ async function verificarBebidasAntesDeEnviar() {
 
         snapshot.forEach(doc => {
             const dados = doc.data();
-            // Verifica se dentro desse pedido antigo existe algum item que não é bebida
             if (dados.itens.some(item => item.categoria !== 'bebidas')) {
                 jaExisteLancheSendoFeito = true;
             }
         });
 
         if (jaExisteLancheSendoFeito) {
-            // Se já tem um lanche lá, pergunta se quer mandar a bebida agora ou com ele
             document.getElementById('modal-bebida').style.display = 'flex';
         } else {
-            // Se a mesa está vazia de comida, manda a bebida direto
             await enviarPedidoFirebase();
         }
 
     } catch (error) {
         console.error("Erro ao verificar histórico da mesa:", error);
-        // Em caso de erro, por segurança, envia o pedido
         await enviarPedidoFirebase();
     }
 }
 
 async function confirmarPedidoComPreferencia() {
+    // Verifica se já está processando
+    if (processandoPedido) return;
+    
+    // Confirma a escolha da bebida
     const radioSelected = document.querySelector('input[name="pref-bebida"]:checked');
-
-    // Captura o valor direto do HTML (EntregarComLanche ou EntregarAgora)
-    window.statusEntregaBebida = radioSelected ? radioSelected.value : "EntregarComLanche";
+    const escolha = radioSelected ? radioSelected.value : "EntregarComLanche";
+    
+    let mensagem = "";
+    if (escolha === "EntregarComLanche") {
+        mensagem = "🥤 Deseja enviar a bebida JUNTO com a comida?";
+    } else {
+        mensagem = "🥤 Deseja enviar a bebida AGORA (separado da comida)?";
+    }
+    
+    if (!confirm(mensagem)) {
+        return;
+    }
+    
+    window.statusEntregaBebida = escolha;
 
     fecharModalBebida();
     await enviarPedidoFirebase();
 }
 
-// --- FUNÇÃO DE ENVIO PARA FIREBASE (MODIFICADA PARA SEPARAR PEDIDOS) ---
-
+// --- FUNÇÃO DE ENVIO PARA FIREBASE COM CONFIRMAÇÃO FINAL ---
 async function enviarPedidoFirebase() {
+    // Se já estiver processando, não faz nada
+    if (processandoPedido) {
+        console.log("Pedido já está sendo processado...");
+        return;
+    }
+    
+    // Confirmação final antes de enviar
+    const totalItens = Object.values(pedidoAtual).reduce((acc, qtd) => acc + qtd, 0);
+    if (!confirm(`✅ Confirma o envio deste pedido com ${totalItens} item(ns)?`)) {
+        return;
+    }
+    
+    // Marca como processando
+    processandoPedido = true;
+    
+    // Desabilita todos os botões de confirmação
+    desabilitarBotoesConfirmacao();
+    
     const mesaTexto = document.getElementById('numero-mesa').innerText;
     const numeroMesa = mesaTexto.replace('Mesa ', '').trim();
     const mesaRef = db.collection("mesas").doc(`mesa-${numeroMesa}`);
@@ -211,14 +256,15 @@ async function enviarPedidoFirebase() {
             categoria: produto.categoria
         }));
 
-    if (itensNovos.length === 0) return;
+    if (itensNovos.length === 0) {
+        processandoPedido = false;
+        return;
+    }
 
-    // Lógica automática para definir o StatusDaBebida caso o modal não tenha sido aberto
     let statusFinalBebida = "Nao se aplica";
     const temBebida = itensNovos.some(i => i.categoria === 'bebidas');
     
     if (temBebida) {
-        // Se o garçom escolheu no modal, usa a escolha. Se não, e tem bebida, assume EntregarAgora
         statusFinalBebida = window.statusEntregaBebida || "EntregarAgora";
     }
 
@@ -228,15 +274,10 @@ async function enviarPedidoFirebase() {
         const docMesa = await mesaRef.get();
         const mesaJaOcupada = docMesa.exists && docMesa.data().status === "OCUPADA";
 
-        // LÓGICA CORRIGIDA: 
-        // Se for "EntregarAgora" -> SEPARA os pedidos (bebida em um, comida em outro)
-        // Se for "EntregarComLanche" -> JUNTA tudo no mesmo pedido
         if (statusFinalBebida === "EntregarAgora") {
-            // SEPARA: Cria pedidos diferentes para comida e bebida
             const itensComida = itensNovos.filter(item => item.categoria !== 'bebidas');
             const itensBebida = itensNovos.filter(item => item.categoria === 'bebidas');
 
-            // Se tem comida, cria pedido de comida (vai para a cozinha)
             if (itensComida.length > 0) {
                 const totalComida = itensComida.reduce((acc, item) => acc + item.subtotal, 0);
                 await subcolecaoPedidos.add({
@@ -244,12 +285,11 @@ async function enviarPedidoFirebase() {
                     totalDoPedido: totalComida,
                     horario: firebase.firestore.FieldValue.serverTimestamp(),
                     statusDoPedido: 'ENVIADO',
-                    StatusDaBebida: "Nao se aplica", // Comida não tem status de bebida
+                    StatusDaBebida: "Nao se aplica",
                     tipo: "comida"
                 });
             }
 
-            // Se tem bebida, cria pedido de bebida separado (vai para o bar)
             if (itensBebida.length > 0) {
                 const totalBebida = itensBebida.reduce((acc, item) => acc + item.subtotal, 0);
                 await subcolecaoPedidos.add({
@@ -257,23 +297,21 @@ async function enviarPedidoFirebase() {
                     totalDoPedido: totalBebida,
                     horario: firebase.firestore.FieldValue.serverTimestamp(),
                     statusDoPedido: 'ENVIADO',
-                    StatusDaBebida: "EntregarAgora", // Bebida vai agora
+                    StatusDaBebida: "EntregarAgora",
                     tipo: "bebida"
                 });
             }
         } else {
-            // Comportamento para "EntregarComLanche": TUDO JUNTO em um único pedido
             await subcolecaoPedidos.add({
                 itens: itensNovos,
                 totalDoPedido: totalPedidoAtual,
                 horario: firebase.firestore.FieldValue.serverTimestamp(),
                 statusDoPedido: 'ENVIADO',
-                StatusDaBebida: "EntregarComLanche", // Bebida vai junto com o lanche
+                StatusDaBebida: "EntregarComLanche",
                 tipo: "completo"
             });
         }
 
-        // Atualiza a mesa (valor total e status)
         const dadosUpdate = {
             valor: firebase.firestore.FieldValue.increment(totalPedidoAtual),
             status: "OCUPADA"
@@ -285,17 +323,41 @@ async function enviarPedidoFirebase() {
 
         await mesaRef.update(dadosUpdate);
 
-        // Limpa variáveis globais
         window.statusEntregaBebida = null;
-        
-        // Limpa o carrinho atual
         Object.keys(pedidoAtual).forEach(key => pedidoAtual[key] = 0);
         
-        alert("Pedido(s) enviado(s) com sucesso!");
+        alert("✅ Pedido enviado com sucesso!");
         window.location.href = "garcom.html";
 
     } catch (error) {
         console.error("Erro ao salvar:", error);
-        alert("Erro técnico.");
+        alert("❌ Erro técnico: " + error.message);
+        
+        // Libera a flag em caso de erro
+        processandoPedido = false;
+        reabilitarBotoesConfirmacao();
     }
+}
+
+// Funções auxiliares para controle visual dos botões
+function desabilitarBotoesConfirmacao() {
+    const botoes = document.querySelectorAll('.btn-finalizar, button[onclick*="confirmar"], button[onclick*="enviar"]');
+    botoes.forEach(botao => {
+        if (botao) {
+            botao.disabled = true;
+            botao.style.opacity = '0.5';
+            botao.style.cursor = 'not-allowed';
+        }
+    });
+}
+
+function reabilitarBotoesConfirmacao() {
+    const botoes = document.querySelectorAll('.btn-finalizar, button[onclick*="confirmar"], button[onclick*="enviar"]');
+    botoes.forEach(botao => {
+        if (botao) {
+            botao.disabled = false;
+            botao.style.opacity = '1';
+            botao.style.cursor = 'pointer';
+        }
+    });
 }

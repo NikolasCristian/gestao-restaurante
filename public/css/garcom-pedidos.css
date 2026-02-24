@@ -24,7 +24,7 @@ body {
 
 /* TÍTULOS */
 .titulo-painel {
-    text-align: left;
+    text-align: center;
     padding-left: 20px;
     font-size: 18px;
     font-weight: 900;
@@ -38,17 +38,22 @@ body {
     gap: 10px;
     padding: 0 20px;
     margin-bottom: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .aba-item {
     flex: 1;
     border: none;
-    padding: 10px;
-    border-radius: 20px;
+    padding: 12px;
+    border-radius: 25px;
     font-weight: bold;
+    font-size: 16px;
     cursor: pointer;
     background: #fff;
     color: #000;
+    transition: all 0.2s;
 }
 
 .aba-item.active {
@@ -59,12 +64,17 @@ body {
 /* LISTA DE PEDIDOS */
 .lista-pedidos {
     padding: 0 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .nenhum-pedido {
     color: #aaaaaa;
     text-align: center;
     font-size: 15px;
+    padding: 40px 0;
 }
 
 /* CARD DE PEDIDO NA LISTA PRINCIPAL */
@@ -74,39 +84,74 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .mesa-indicador {
     background: #d9d9d9;
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
+    width: 65px;
+    height: 65px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 900;
+    flex-shrink: 0;
+}
+
+.info-pedido {
+    flex: 1;
+    margin: 0 15px;
+}
+
+.info-pedido strong {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.info-pedido span {
+    font-size: 14px;
+    color: #666;
 }
 
 .btn-ver {
     background: #6eff9d;
     border: none;
-    width: 120px;
-    height: 50px;
-    border-radius: 12px;
-    font-size: 22px;
+    min-width: 300px;
+    height: 55px;
+    padding: 0 20px;
+    border-radius: 15px;
+    font-size: 20px;
     font-weight: 900;
     cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 4px 0 #4ec97a;
+    margin-right: 20px;
+    margin-left: 60px;
+}
+
+;
+
+.btn-ver:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #4ec97a;
 }
 
 .horario-pedido {
     font-weight: 900;
     font-size: 16px;
-    padding-right: 10px;
     color: #000;
+    white-space: nowrap;
 }
 
 /* ===== MODAL ===== */
@@ -123,13 +168,14 @@ body {
     align-items: center;
     justify-content: center;
     padding: 15px;
+    box-sizing: border-box;
 }
 
 /* Caixa do Modal */
 .box2 {
     background-color: #e0e0e0;
-    width: 95%;
-    max-width: 380px;
+    width: 100%;
+    max-width: 400px;
     max-height: 85vh;
     border-radius: 30px;
     overflow: hidden;
@@ -137,6 +183,7 @@ body {
     flex-direction: column;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     animation: zoomIn 0.25s ease-out;
+    margin: 0 auto;
 }
 
 @keyframes zoomIn {
@@ -144,6 +191,7 @@ body {
         transform: scale(0.8);
         opacity: 0;
     }
+
     to {
         transform: scale(1);
         opacity: 1;
@@ -176,6 +224,17 @@ body {
     cursor: pointer;
     line-height: 1;
     padding: 0 5px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.box2 header button:active {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Corpo do Modal */
@@ -303,15 +362,22 @@ body {
 .btn-ver-status {
     background: #6eff9d;
     border: none;
-    padding: 5px 20px;
-    border-radius: 15px;
+    padding: 8px 25px;
+    border-radius: 20px;
     font-weight: 900;
     font-size: 0.9rem;
     cursor: pointer;
+    box-shadow: 0 3px 0 #4ec97a;
+    transition: transform 0.1s;
+}
+
+.btn-ver-status:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 #4ec97a;
 }
 
 /* Botão Fechar Inferior */
-.box2 > button {
+.box2>button {
     background-color: #000;
     color: #fff;
     border: none;
@@ -322,14 +388,24 @@ body {
     font-size: 1rem;
     cursor: pointer;
     text-transform: uppercase;
-    transition: transform 0.2s;
+    transition: transform 0.1s;
 }
 
-.box2 > button:active {
+.box2>button:active {
     transform: scale(0.95);
 }
-
-/* Botão Verde de Entregar (opcional) */
+.TOTAL-ITENS{
+    display: flex;
+    justify-content: center;
+}
+.modal-footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    margin: 0px;
+}
+/* Botão Verde de Entregar */
 .btn-entregar-modal {
     background-color: #6eff9d;
     color: #000;
@@ -342,6 +418,17 @@ body {
     cursor: pointer;
     box-shadow: 0 4px 0 #4ec97a;
     margin: 0 20px 10px 20px;
+    transition: transform 0.1s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-entregar-modal:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #4ec97a;
 }
 
 /* Barra de Rolagem Personalizada */
@@ -356,4 +443,84 @@ body {
 #modal-lista-itens::-webkit-scrollbar-thumb {
     background: #000;
     border-radius: 10px;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 480px) {
+
+    .btn-ver {
+        min-width: 85px;
+        height: 50px;
+        font-size: 18px;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 607px) {
+    .item-pedido-lista {
+        gap: 5px;
+    }
+    .btn-ver {
+        min-width: 300px;
+    }
+}
+
+@media (max-width: 569px) {
+    .btn-ver {
+        min-width: 250px;
+    }
+}
+@media (max-width: 569) {
+    .btn-ver {
+        min-width: 300px;
+    }
+}
+
+@media (max-width: 547px) {
+    .btn-ver {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 500px) {
+    .btn-ver {
+        min-width: 160px;
+    }
+}
+
+@media (max-width: 451px) {
+    .btn-ver {
+        margin-left: 40px;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 389px) {
+
+    .abas-navegacao {
+        max-width: 300px;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .aba-item {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+    .btn-ver {
+        width: 50px;
+        margin-left: 10px;
+        margin-right: -5px;
+    }
+}
+@media (max-width: 327px) {
+    .item-pedido-lista {
+        display: flex;
+        flex-direction: column;
+    }
+    .btn-ver {
+        width: 100%;
+        margin: 0;
+    }
 }

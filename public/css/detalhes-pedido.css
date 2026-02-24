@@ -1,17 +1,30 @@
-
-.header-preto { 
-    background-color: #000; 
-    color: #fff; 
-    padding: 15px 20px; 
-    display: flex; 
-    justify-content: space-between; 
+.header-preto {
+    background-color: #000;
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
-.mesa-texto { font-size: 24px; font-weight: 900; }
+.mesa-texto {
+    font-size: 24px;
+    font-weight: 900;
+}
 
-.titulo-sessao { padding: 20px 20px 5px; font-weight: 900; margin: 0; color: #333; }
-.label-mesa{ padding: 20px 20px 5px; font-weight: 900; margin: 0; color: #ffffff; }
+.titulo-sessao {
+    padding: 20px 20px 5px;
+    font-weight: 900;
+    margin: 0;
+    color: #333;
+}
+
+.label-mesa {
+    padding: 20px 20px 5px;
+    font-weight: 900;
+    margin: 0;
+    color: #ffffff;
+}
 
 /* Estilo do card de cada item (Hamburguer/Pizza) */
 .card-alimento {
@@ -24,7 +37,12 @@
     gap: 15px;
 }
 
-.img-detalhe { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; }
+.img-detalhe {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+}
 
 .qtd-indicador {
     background: #d9d9d9;
@@ -33,7 +51,13 @@
     font-weight: 900;
 }
 
-.footer-detalhes { position: fixed; bottom: 20px; width: 100%; padding: 0 20px; box-sizing: border-box; }
+.footer-detalhes {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
 
 .btn-bk-acao {
     width: 100%;
@@ -43,5 +67,12 @@
     font-size: 20px;
     font-weight: 900;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 326px) {
+    .card-alimento {
+        display: flex;
+        flex-direction: column;
+    }
 }

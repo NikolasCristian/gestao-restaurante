@@ -42,7 +42,7 @@ function renderizarInterfaceBarman(pedido) {
     let htmlConteudo = '';
 
     if (itensBebidas.length > 0) {
-        htmlConteudo += '<h3 style="margin: 20px 0 5px; font-family: Arial Black, sans-serif; color: #0066cc; text-align:center;">ITENS DO BAR</h3>';
+        htmlConteudo += '<h3 style="margin: 20px 0 5px; font-family: Arial Black, sans-serif; color: #000000; text-align:center;">ITENS DO BAR</h3>';
 
         htmlConteudo += itensBebidas.map(item => {
             // Busca imagem no array global de alimentos (se existir)
@@ -50,13 +50,13 @@ function renderizarInterfaceBarman(pedido) {
             const imgFinal = item.img || (produtoRef ? produtoRef.img : 'img/placeholder-bebida.png');
 
             return `
-                <div class="card-bebida" style="display:flex; align-items:center; background:#fff; margin:10px 0; padding:15px; border-radius:20px; gap:15px; border-left: 8px solid #0066cc; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <div class="card-bebida" style="display:flex; align-items:center; background:#fff; margin:10px 15px; padding:15px; border-radius:20px; gap:15px; border-left: 8px solid #7a7a7a; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                     <img src="${imgFinal}" style="width: 80px; height: 80px; border-radius: 15px; object-fit: cover;" onerror="this.src='img/placeholder-bebida.png'">
                     <div class="info-alimento" style="flex:1;">
                         <h3 style="margin:0; font-family:'Arial Black', sans-serif; font-size:18px;">${item.nome}</h3>
                         <p style="margin:5px 0 0; color:#666; font-size:13px;">${item.observacao || ''}</p>
                     </div>
-                    <div class="qtd-indicador" style="background:#0066cc; color: white; padding:10px 18px; border-radius:12px; font-weight:900; font-size:20px;">
+                    <div class="qtd-indicador" style="background: #7a7a7a; color: white; padding:10px 18px; border-radius:12px; font-weight:900; font-size:20px;">
                         ${item.quantidade}
                     </div>
                 </div>
@@ -75,7 +75,7 @@ function renderizarInterfaceBarman(pedido) {
     // O botão só fica ativo se o status da bebida for 'EntregarAgora' (liberado pela cozinha ou automático)
     if (pedido.StatusDaBebida === 'EntregarAgora') {
         footerArea.innerHTML = `
-            <button class="btn-entregar" style="background-color: #0066cc; color: white; width: 100%; border: none; padding: 20px; border-radius: 40px; font-weight: bold; font-size: 18px; cursor: pointer;" 
+            <button class="btn-entregar" style="background-color: #afafaf; color: white; width: 100%; border: none; padding: 20px; border-radius: 40px; font-weight: bold; font-size: 18px; cursor: pointer;" 
                 onclick="entregarBebida()">
                 ENTREGAR BEBIDAS
             </button>
@@ -83,11 +83,11 @@ function renderizarInterfaceBarman(pedido) {
     } else {
         footerArea.innerHTML = `
             <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-                <div style="background: #f0f7ff; color: #0066cc; padding: 12px; border-radius: 40px; text-align: center; font-weight: bold; border: 1px solid #0066cc; font-size: 14px;">
+                <div style="background: #f0f7ff; color: #009c27; padding: 12px; border-radius: 40px; text-align: center; font-weight: bold; border: 1px solid #afafaf; font-size: 14px;">
                     ${pedido.statusDoPedido === 'FALTAoREFRI' ? '⏳ AGUARDANDO COZINHA' : '✅ BEBIDA ENTREGUE'}
                 </div>
                 <button disabled style="background-color: #ccc; color: white; width: 100%; padding: 20px; border-radius: 40px; border: none; font-weight: bold;">
-                    AGUARDANDO LIBERAÇÃO
+                    AGUARDANDO A RETIRADA...
                 </button>
             </div>
         `;

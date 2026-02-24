@@ -122,7 +122,6 @@
 
 /* Botão de Pedido Sem Mesa */
 .pedido-sem-mesa {
-    position: sticky;
     bottom: 20px;
 }
 
@@ -148,4 +147,11 @@
     border-radius: 12px;
     font-size: 20px;
     color: #333;
+}
+
+@media (max-width: 427px) {
+    .filtros-mesas, .grid-mesas {
+        display: flex;
+        flex-direction: column;
+    }
 }

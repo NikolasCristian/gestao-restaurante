@@ -19,7 +19,7 @@ function alternarAba(status) {
     // Gerenciamento visual: Remove active de todos e coloca no atual
     document.querySelectorAll('.aba-item').forEach(btn => btn.classList.remove('active'));
 
-    // Mapeamento de IDs (ajuste conforme seu HTML)
+    // Mapeamento de IDs
     const mapaBotoes = {
         'ENVIADO': 'aba-novos',
         'PREPARANDO': 'aba-preparo',
@@ -33,17 +33,15 @@ function alternarAba(status) {
 }
 
 /**
- * 2. CARREGAMENTO DE PEDIDOS - VERSÃO COM AGRUPAMENTO PARA PRONTOS
+ * 2. CARREGAMENTO DE PEDIDOS
  */
 function carregarPedidos() {
     const lista = document.getElementById('lista-pedidos');
     lista.innerHTML = `<p class="msg-status">Buscando ${abaAtual}...</p>`;
 
     if (abaAtual === 'PRONTO') {
-        // Para PRONTOS, precisamos agrupar por mesa
         carregarPedidosProntosAgrupados();
     } else {
-        // Para ENVIADO e PREPARANDO, mantém o comportamento original (um card por pedido)
         db.collectionGroup('pedidos')
             .where("statusDoPedido", "==", abaAtual)
             .onSnapshot(snapshot => {
@@ -58,23 +56,20 @@ function carregarPedidos() {
                     const pedido = docPed.data();
                     const pedidoId = docPed.id;
 
-                    // Pega o ID da mesa subindo na árvore do banco
                     const mesaId = docPed.ref.parent.parent.id;
-                    const numeroMesa = mesaId.replace('mesa-', '');
 
-                    renderizarLinhaPedido(numeroMesa, pedido, mesaId, pedidoId);
+                    renderizarLinhaPedido(pedido, mesaId, pedidoId);
                 });
             });
     }
 }
 
 /**
- * 2.1 CARREGAMENTO ESPECÍFICO PARA PRONTOS (AGRUPADO POR MESA)
+ * 2.1 CARREGAMENTO ESPECÍFICO PARA PRONTOS (AGRUPADO)
  */
 function carregarPedidosProntosAgrupados() {
     const lista = document.getElementById('lista-pedidos');
 
-    // Primeiro snapshot: busca todos os pedidos PRONTOS
     db.collectionGroup('pedidos')
         .where("statusDoPedido", "==", "PRONTO")
         .onSnapshot(snapshot => {
@@ -84,42 +79,41 @@ function carregarPedidosProntosAgrupados() {
                 return;
             }
 
-            // Objeto para agrupar por mesa
             const pedidosPorMesa = {};
 
             snapshot.forEach(docPed => {
                 const pedido = docPed.data();
                 const pedidoId = docPed.id;
-
-                // Pega o ID da mesa
                 const mesaId = docPed.ref.parent.parent.id;
-                const numeroMesa = mesaId.replace('mesa-', '');
 
-                // Chave única para a mesa
-                const chaveMesa = `${mesaId}|${numeroMesa}`;
+                // Verifica se é sem mesa
+                const isSemMesa = mesaId === 'sem-mesa';
+
+                // Para sem mesa, usa o nome do cliente como identificador
+                const identificador = isSemMesa ? (pedido.nomeCliente || 'Cliente') : mesaId.replace('mesa-', '');
+                const chaveMesa = isSemMesa ? `sem-mesa-${identificador}` : mesaId;
 
                 if (!pedidosPorMesa[chaveMesa]) {
                     pedidosPorMesa[chaveMesa] = {
                         mesaId: mesaId,
-                        numeroMesa: numeroMesa,
+                        identificador: identificador,
+                        isSemMesa: isSemMesa,
                         pedidos: [],
                         totalItens: 0,
-                        horarioMaisRecente: null
+                        horarioMaisRecente: null,
+                        nomeCliente: isSemMesa ? identificador : null
                     };
                 }
 
-                // Adiciona o pedido ao grupo
                 pedidosPorMesa[chaveMesa].pedidos.push({
                     id: pedidoId,
                     dados: pedido
                 });
 
-                // Calcula total de itens deste pedido
                 const itensPedido = pedido.itens || [];
                 const totalItensPedido = itensPedido.reduce((acc, item) => acc + (item.quantidade || 1), 0);
                 pedidosPorMesa[chaveMesa].totalItens += totalItensPedido;
 
-                // Pega o horário mais recente
                 if (pedido.horario) {
                     const horarioMillis = pedido.horario.toMillis();
                     if (!pedidosPorMesa[chaveMesa].horarioMaisRecente || horarioMillis > pedidosPorMesa[chaveMesa].horarioMaisRecente) {
@@ -128,7 +122,6 @@ function carregarPedidosProntosAgrupados() {
                 }
             });
 
-            // Renderiza a lista agrupada
             lista.innerHTML = '';
 
             Object.values(pedidosPorMesa).forEach(grupo => {
@@ -136,19 +129,21 @@ function carregarPedidosProntosAgrupados() {
                     ? new Date(grupo.horarioMaisRecente).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                     : '--:--';
 
+                // Define o ícone baseado no tipo
+                const iconeHTML = grupo.isSemMesa
+                    ? '<i class="fas fa-concierge-bell"></i>'
+                    : '<i class="fas fa-check"></i>';
                 const itemHTML = `
-                <div class="item-pedido-lista" id="mesa-${grupo.mesaId}-prontos" style="border-left: 5px solid #2ecc71;">
-                    <div class="mesa-indicador" style="background: #2ecc71; color: white; font-weight: bold;">
-                        <i class="fas fa-check"></i>
+                    <div class="item-pedido-lista" id="mesa-${grupo.mesaId}-prontos" style="border-left: 5px solid #2ecc71;">
+                        <div class="mesa-indicador" style="background: #2ecc71; color: white; font-weight: bold;">
+                            ${iconeHTML}
+                        </div>
+                         <button class="btn-ver" onclick="abrirDetalhesProntos('${grupo.mesaId}', '${grupo.identificador}', ${grupo.isSemMesa})">VER</button>
+                        <div class="info-pedido">
+                            <span class="horario-pedido">${hora}</span>
+                        </div>
                     </div>
-                    <div class="info-pedido">
-                        <strong>Mesa ${grupo.numeroMesa}</strong>
-                        <span style="font-size: 0.9rem; color: #666;">${grupo.totalItens} itens prontos</span>
-                        <span class="horario-pedido">${hora}</span>
-                    </div>
-                    <button class="btn-ver" onclick="abrirDetalhesProntos('${grupo.mesaId}', '${grupo.numeroMesa}')">VER</button>
-                </div>
-            `;
+                `;
 
                 lista.innerHTML += itemHTML;
             });
@@ -158,19 +153,20 @@ function carregarPedidosProntosAgrupados() {
 /**
  * 3. RENDERIZAÇÃO DA LINHA (para ENVIADO e PREPARANDO)
  */
-function renderizarLinhaPedido(numeroMesa, pedido, mesaId, pedidoId) {
+function renderizarLinhaPedido(pedido, mesaId, pedidoId) {
     const lista = document.getElementById('lista-pedidos');
     const hora = pedido.horario ? new Date(pedido.horario.toMillis()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--';
 
+    const isSemMesa = mesaId === 'sem-mesa';
+
     // Definição de Cores e Ícones por Status
-    let corStatus = '#bdc3c7'; // Cinza (Enviado)
-    let icone = numeroMesa;
+    let corStatus = '#bdc3c7';
+    let icone = isSemMesa
+        ? '<i class="fas fa-concierge-bell"></i>'
+        : mesaId.replace('mesa-', '');
 
     if (pedido.statusDoPedido === 'PREPARANDO') {
-        corStatus = '#f1a933'; // Laranja
-    } else if (pedido.statusDoPedido === 'PRONTO') {
-        corStatus = '#2ecc71'; // Verde
-        icone = '<i class="fas fa-check"></i>';
+        corStatus = '#f1a933';
     }
 
     const itemHTML = `
@@ -178,11 +174,10 @@ function renderizarLinhaPedido(numeroMesa, pedido, mesaId, pedidoId) {
             <div class="mesa-indicador" style="background: ${corStatus}; color: white; font-weight: bold;">
                 ${icone}
             </div>
+            <button class="btn-ver" onclick="abrirDetalhes('${mesaId}', '${pedidoId}', ${isSemMesa})">VER</button>
             <div class="info-pedido">
-                <strong>Mesa ${numeroMesa}</strong>
                 <span class="horario-pedido">${hora}</span>
             </div>
-            <button class="btn-ver" onclick="abrirDetalhes('${mesaId}', '${pedidoId}', '${numeroMesa}')">VER</button>
         </div>
     `;
 
@@ -192,17 +187,22 @@ function renderizarLinhaPedido(numeroMesa, pedido, mesaId, pedidoId) {
 }
 
 /**
- * 4. DETALHES DO PEDIDO (MODAL) - Versão original para pedidos individuais
+ * 4. DETALHES DO PEDIDO (MODAL) - Versão adaptada
  */
-function abrirDetalhes(mesaId, pedidoId, numeroMesa) {
+function abrirDetalhes(mesaId, pedidoId, isSemMesa) {
     const modal = document.getElementById('modal-detalhes');
     const listaContainer = document.getElementById('modal-lista-itens');
-    document.getElementById('modal-mesa-titulo').innerText = `MESA ${numeroMesa}`; // Mudado para "MESA" igual à foto
+
+    if (isSemMesa) {
+        document.getElementById('modal-mesa-titulo').innerHTML = `<i class="fas fa-bell-concierge"></i> PEDIDO SEM MESA`;
+    } else {
+        const numeroMesa = mesaId.replace('mesa-', '');
+        document.getElementById('modal-mesa-titulo').innerText = `MESA ${numeroMesa}`;
+    }
 
     modal.style.display = 'flex';
     listaContainer.innerHTML = '<p class="carregando">Lendo itens...</p>';
 
-    // Limpa listener anterior para não gastar dados
     if (monitoramentoModal) monitoramentoModal();
 
     monitoramentoModal = db.collection('mesas').doc(mesaId).collection('pedidos').doc(pedidoId)
@@ -211,36 +211,44 @@ function abrirDetalhes(mesaId, pedidoId, numeroMesa) {
 
             const dados = doc.data();
             const itensPedido = dados.itens || [];
-            
-            // Calcula total de itens para o badge
-            const totalItens = itensPedido.reduce((acc, item) => acc + (item.quantidade || 1), 0);
 
-            // HTML com a estrutura exata da foto
             let htmlModal = `
-                <!-- STATUS ENVIADOS igual à foto -->
                 <div class="status-container">
                     <div class="status-left">
-                        <h3>PEDIDOS</h3>
+                        <h3>DETALHES DO PEDIDO</h3>
                     </div>
                 </div>
             `;
 
-            // ITENS DO PEDIDO - com a estrutura exata da foto
+            if (isSemMesa && dados.nomeCliente) {
+                htmlModal += `
+                    <div style="background: #f8f9fa; color: #000; border-radius: 12px; padding: 12px; margin-bottom: 15px; border-left: 5px solid #2ecc71; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-concierge-bell" style="color: #2ecc71;"></i>
+                        <div>
+                            <small style="display: block; font-size: 10px; color: #666; font-weight: bold;">CLIENTE</small>
+                            <strong style="text-transform: uppercase;">${dados.nomeCliente}</strong>
+                        </div>
+                    </div>
+                `;
+            }
+
             itensPedido.forEach(item => {
-                const info = alimentos ? alimentos.find(a => a.nome === item.nome) : null;
-                const imagem = info ? info.img : "https://via.placeholder.com/80x80/cccccc/666666?text=Produto";
+                // BUSCA A DESCRIÇÃO DIRETO DO ARRAY ALIMENTOS
+                const info = alimentos.find(a => a.nome === item.nome);
+                const imagem = info ? info.img : "https://via.placeholder.com/80";
+                const descricaoProduto = info ? info.descricao : "Descrição não disponível";
 
                 htmlModal += `
                     <div class="item-card-modal">
                         <div class="item-img-container">
-                            <img src="${imagem}" onerror="this.src='https://via.placeholder.com/80x80/cccccc/666666?text=Erro'" alt="${item.nome}">
+                            <img src="${imagem}" onerror="this.src='https://via.placeholder.com/80'" alt="${item.nome}">
                         </div>
                         <div class="item-info">
                             <h4>${item.nome}</h4>
-                            <div class="item-obs">${item.observacao || "Pão brioche, carne, molho e alface."}</div>
+                            <div class="item-obs" style="color: #666; font-style: italic; font-size: 13px;">${descricaoProduto}</div>
                             <div class="item-price-row">
-                                <span class="item-price">R$ ${item.preco ? item.preco.toFixed(2).replace('.', ',') : '20,99'}</span>
-                                <span class="item-qtd-badge">${item.quantidade || 1}</span>
+                                <span class="item-price">R$ ${item.precoUnitario ? item.precoUnitario.toFixed(2).replace('.', ',') : (item.preco ? item.preco.toFixed(2).replace('.', ',') : '0,00')}</span>
+                                <span class="item-qtd-badge">${item.quantidade || 1}x</span>
                             </div>
                         </div>
                     </div>
@@ -252,96 +260,115 @@ function abrirDetalhes(mesaId, pedidoId, numeroMesa) {
 }
 
 /**
- /**
  * 4.1 DETALHES DO PEDIDO (MODAL) - Versão para prontos agrupados
  */
-function abrirDetalhesProntos(mesaId, numeroMesa) {
+function abrirDetalhesProntos(mesaId, identificador, isSemMesa) {
     const modal = document.getElementById('modal-detalhes');
     const listaContainer = document.getElementById('modal-lista-itens');
-    document.getElementById('modal-mesa-titulo').innerText = `MESA ${numeroMesa} - PRONTOS`; // CORRIGIDO: numeroMesa (minúsculo)
+
+    if (isSemMesa) {
+        document.getElementById('modal-mesa-titulo').innerHTML = `<i class="fas fa-bell-concierge"></i> ${identificador} - PRONTOS`;
+    } else {
+        document.getElementById('modal-mesa-titulo').innerText = `MESA ${identificador} - PRONTOS`;
+    }
 
     modal.style.display = 'flex';
     listaContainer.innerHTML = '<p class="carregando">Carregando itens prontos...</p>';
 
-    // Limpa listener anterior
     if (monitoramentoModal) monitoramentoModal();
 
-    // Busca TODOS os pedidos PRONTOS desta mesa
-    monitoramentoModal = db.collection('mesas').doc(mesaId).collection('pedidos')
-        .where("statusDoPedido", "==", "PRONTO")
-        .onSnapshot(snapshot => {
-            if (snapshot.empty) {
-                listaContainer.innerHTML = '<p class="nenhum-pedido">Nenhum item pronto nesta mesa</p>';
-                return;
-            }
+    let query = db.collection('mesas').doc(mesaId).collection('pedidos')
+        .where("statusDoPedido", "==", "PRONTO");
 
-            // Array para armazenar todos os itens (para possível agregação futura)
-            const todosItens = [];
-            let totalItens = 0;
+    if (isSemMesa) {
+        query = query.where("nomeCliente", "==", identificador);
+    }
 
-            snapshot.forEach(doc => {
-                const pedido = doc.data();
-                if (pedido.itens && Array.isArray(pedido.itens)) {
-                    pedido.itens.forEach(item => {
-                        const quantidade = item.quantidade || 1;
-                        todosItens.push({
-                            ...item,
-                            quantidade: quantidade,
-                            pedidoId: doc.id
-                        });
-                        totalItens += quantidade;
+    monitoramentoModal = query.onSnapshot(snapshot => {
+        if (snapshot.empty) {
+            listaContainer.innerHTML = '<p class="nenhum-pedido">Nenhum item pronto</p>';
+            return;
+        }
+
+        const todosItens = [];
+        let totalItens = 0;
+
+        snapshot.forEach(doc => {
+            const pedido = doc.data();
+            if (pedido.itens && Array.isArray(pedido.itens)) {
+                pedido.itens.forEach(item => {
+                    const quantidade = item.quantidade || 1;
+                    todosItens.push({
+                        ...item,
+                        quantidade: quantidade,
+                        pedidoId: doc.id
                     });
-                }
-            });
+                    totalItens += quantidade;
+                });
+            }
+        });
 
-            // Monta o HTML do modal
-            let htmlModal = `
-                <div style="margin-bottom: 15px;">
-                    <span class="status-badge-green" style="font-size: 1rem; padding: 8px 20px;">Total: ${totalItens} itens</span>
-                </div>
-            `;
+        let htmlModal = `
+            <div class="TOTAL-ITENS" style="margin-bottom: 15px;">
+                <span class="status-badge-green" style="font-size: 1rem; padding: 8px 20px; display: flex; align-items: center; gap: 10px; justify-content: center;">
+                    ${isSemMesa ? '<i class="fas fa-bell-concierge"></i>' : '<i class="fas fa-check-double"></i>'} 
+                    Total: ${totalItens} itens prontos
+                </span>
+            </div>
+        `;
 
-            // Lista todos os itens (você pode optar por agregar itens iguais se preferir)
-            todosItens.forEach(item => {
-                const info = alimentos ? alimentos.find(a => a.nome === item.nome) : null;
-                const imagem = info ? info.img : "img/placeholder.png";
+        todosItens.forEach(item => {
+            // BUSCA A DESCRIÇÃO DIRETO DO ARRAY ALIMENTOS
+            const info = alimentos.find(a => a.nome === item.nome);
+            const imagem = info ? info.img : "img/placeholder.png";
+            const descricaoProduto = info ? info.descricao : "Produto não encontrado";
 
-                htmlModal += `
-                    <div class="item-card-modal">
-                        <div class="item-img-container">
-                            <img src="${imagem}" onerror="this.src='https://via.placeholder.com/80x80/cccccc/666666?text=Erro'" alt="${item.nome}">
-                        </div>
-                        <div class="item-info">
-                            <h4>${item.nome}</h4>
-                            <div class="item-obs">${item.observacao || "Pão brioche, carne, molho e alface."}</div>
-                            <div class="item-price-row">
-                                <span class="item-price">R$ ${item.preco ? item.preco.toFixed(2).replace('.', ',') : '20,99'}</span>
-                                <span class="item-qtd-badge">${item.quantidade || 1}</span>
-                            </div>
+            htmlModal += `
+                <div class="item-card-modal">
+                    <div class="item-img-container">
+                        <img src="${imagem}" alt="${item.nome}">
+                    </div>
+                    <div class="item-info">
+                        <h4>${item.nome}</h4>
+                        <div class="item-obs" style="color: #666; font-style: italic; font-size: 13px;">${descricaoProduto}</div>
+                        <div class="item-price-row">
+                            <span class="item-price">R$ ${item.precoUnitario ? item.precoUnitario.toFixed(2).replace('.', ',') : '0,00'}</span>
+                            <span class="item-qtd-badge">${item.quantidade}x</span>
                         </div>
                     </div>
-                `;
-            });
-
-            // Botões inferiores
-            htmlModal += `
-                <div class="modal-footer">
-                    <button class="btn-entregar-modal" onclick="entregarTodosProntos('${mesaId}')">ENTREGAR TUDO</button>
                 </div>
             `;
-
-            listaContainer.innerHTML = htmlModal;
         });
+
+        htmlModal += `
+            <div class="modal-footer">
+                <button class="btn-entregar-modal" onclick="entregarTodosProntos('${mesaId}', ${isSemMesa}, '${identificador}')">
+                    <i class="fas fa-check"></i> CONFIRMAR ENTREGA
+                </button>
+            </div>
+        `;
+
+        listaContainer.innerHTML = htmlModal;
+    });
 }
 
 /**
- * 5. FUNÇÃO PARA ENTREGAR TODOS OS PEDIDOS PRONTOS DE UMA MESA
+ * 5. FUNÇÃO PARA ENTREGAR TODOS OS PEDIDOS PRONTOS
  */
-function entregarTodosProntos(mesaId) {
-    if (confirm('Confirmar entrega de todos os itens prontos desta mesa?')) {
-        db.collection('mesas').doc(mesaId).collection('pedidos')
-            .where("statusDoPedido", "==", "PRONTO")
-            .get()
+function entregarTodosProntos(mesaId, isSemMesa, identificador) {
+    let mensagem = isSemMesa
+        ? `Confirmar entrega de todos os itens de ${identificador}?`
+        : `Confirmar entrega de todos os itens prontos da Mesa ${identificador}?`;
+
+    if (confirm(mensagem)) {
+        let query = db.collection('mesas').doc(mesaId).collection('pedidos')
+            .where("statusDoPedido", "==", "PRONTO");
+
+        if (isSemMesa) {
+            query = query.where("nomeCliente", "==", identificador);
+        }
+
+        query.get()
             .then(snapshot => {
                 const batch = db.batch();
                 snapshot.forEach(doc => {
@@ -368,7 +395,7 @@ function entregarTodosProntos(mesaId) {
 function fecharModal() {
     document.getElementById('modal-detalhes').style.display = 'none';
     if (monitoramentoModal) {
-        monitoramentoModal(); // Unsubscribe
+        monitoramentoModal();
         monitoramentoModal = null;
     }
 }

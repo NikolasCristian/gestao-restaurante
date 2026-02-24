@@ -1,6 +1,9 @@
 // Objeto global para armazenar as quantidades selecionadas { id: quantidade }
 const pedidoAtual = {};
 
+// Flag para controlar se já está processando
+let processandoPedido = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     // Para SEM MESA, não pegamos mesa da URL
     // Mostramos um título diferente
@@ -94,13 +97,13 @@ function irParaRevisao() {
             totalGeral += subtotal;
 
             listaRevisao.innerHTML += `
-                <div class="card-produto-revisao" style="display: flex; align-items: center; background: #fff; padding: 10px; border-radius: 12px; margin-bottom: 10px;">
+                <div class="card-produto-revisao" style="display: flex; align-items: center; background: #ffffff; padding: 10px; border-radius: 12px; margin-bottom: 10px;">
                     <img src="${produto.img}" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover;">
                     <div style="flex: 1; margin-left: 15px;">
                         <h4 style="font-family: 'Arial Black'; font-size: 14px; margin: 0;">${produto.nome}</h4>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
                             <span style="font-weight: 900;">R$ ${subtotal.toFixed(2).replace('.', ',')}</span>
-                            <span style="background: #000; color: #fff; padding: 2px 10px; border-radius: 20px; font-size: 12px;">${qtd}x</span>
+                            <span style="background: #d6d6d6; color: #000000; padding: 2px 10px; border-radius: 20px; font-size: 12px;">${qtd}x</span>
                         </div>
                     </div>
                 </div>
@@ -155,6 +158,9 @@ function fecharModalNomeCliente() {
 }
 
 function confirmarNomeCliente() {
+    // Verifica se já está processando
+    if (processandoPedido) return;
+    
     const inputNome = document.getElementById('input-nome-cliente');
     const nomeCliente = inputNome.value.trim();
     
@@ -177,6 +183,9 @@ function fecharModalBebida() {
 }
 
 async function verificarBebidasAntesDeEnviar() {
+    // Verifica se já está processando
+    if (processandoPedido) return;
+    
     // Verifica se é SEM MESA (pelo header)
     const mesaTexto = document.getElementById('numero-mesa').innerText;
     const isSemMesa = mesaTexto.includes('Sem Mesa');
@@ -273,6 +282,9 @@ async function verificarBebidasAntesDeEnviar() {
 }
 
 async function confirmarPedidoComPreferencia() {
+    // Verifica se já está processando
+    if (processandoPedido) return;
+    
     const radioSelected = document.querySelector('input[name="pref-bebida"]:checked');
     window.statusEntregaBebida = radioSelected ? radioSelected.value : "EntregarComLanche";
 
@@ -280,9 +292,20 @@ async function confirmarPedidoComPreferencia() {
     await enviarPedidoFirebase();
 }
 
-// --- FUNÇÃO DE ENVIO PARA FIREBASE (ADAPTADA PARA SEM MESA) ---
-// --- FUNÇÃO DE ENVIO PARA FIREBASE (SALVANDO EM mesas/sem-mesa/pedidos) ---
+// --- FUNÇÃO DE ENVIO PARA FIREBASE COM CONTROLE DE DUPLICIDADE ---
 async function enviarPedidoFirebase() {
+    // Se já estiver processando, não faz nada
+    if (processandoPedido) {
+        console.log("Pedido já está sendo processado...");
+        return;
+    }
+    
+    // Marca como processando
+    processandoPedido = true;
+    
+    // Desabilita todos os botões de confirmação visualmente
+    desabilitarBotoesConfirmacao();
+    
     const mesaTexto = document.getElementById('numero-mesa').innerText;
     const isSemMesa = mesaTexto.includes('Sem Mesa');
     
@@ -300,7 +323,10 @@ async function enviarPedidoFirebase() {
             categoria: produto.categoria
         }));
 
-    if (itensNovos.length === 0) return;
+    if (itensNovos.length === 0) {
+        processandoPedido = false;
+        return;
+    }
 
     let statusFinalBebida = "Nao se aplica";
     const temBebida = itensNovos.some(i => i.categoria === 'bebidas');
@@ -377,11 +403,39 @@ async function enviarPedidoFirebase() {
         
         alert("Pedido enviado com sucesso!");
         
-        // Redireciona de volta para o cardápio sem mesa
-        window.location.href = "cardapio-sem-mesa.html";
+        // REDIRECIONA PARA O PAINEL DO GARÇOM
+        window.location.href = "garcom.html";
 
     } catch (error) {
         console.error("Erro ao salvar:", error);
         alert("Erro técnico: " + error.message);
+        // Libera a flag em caso de erro
+        processandoPedido = false;
+        // Reabilita os botões
+        reabilitarBotoesConfirmacao();
     }
+}
+
+// Função para desabilitar botões de confirmação
+function desabilitarBotoesConfirmacao() {
+    const botoes = document.querySelectorAll('.btn-finalizar, .btn-ver, .btn-ok, button[onclick*="confirmar"], button[onclick*="enviar"]');
+    botoes.forEach(botao => {
+        if (botao) {
+            botao.disabled = true;
+            botao.style.opacity = '0.5';
+            botao.style.cursor = 'not-allowed';
+        }
+    });
+}
+
+// Função para reabilitar botões de confirmação
+function reabilitarBotoesConfirmacao() {
+    const botoes = document.querySelectorAll('.btn-finalizar, .btn-ver, .btn-ok, button[onclick*="confirmar"], button[onclick*="enviar"]');
+    botoes.forEach(botao => {
+        if (botao) {
+            botao.disabled = false;
+            botao.style.opacity = '1';
+            botao.style.cursor = 'pointer';
+        }
+    });
 }

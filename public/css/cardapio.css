@@ -1,6 +1,6 @@
 /* --- CONFIGURAÇÕES GERAIS --- */
 :root {
-    --bg-light: #f4f4f4;
+    --bg-light: #d8d8d8;
     --bk-orange: #ed7d31;
     --bk-black: #000000;
     --bk-white: #ffffff;
@@ -103,7 +103,7 @@ main {
     font-family: 'Arial Black', sans-serif;
     font-size: 26px;
     font-weight: 900;
-    letter-spacing: -1px;
+    text-align: center;
 }
 
 /* --- CATEGORIAS E PRODUTOS --- */
@@ -312,53 +312,53 @@ main {
 }
 
 /*modal*/
-
 /* Container do Modal */
 .modal {
-    display: none; 
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw; /* 100% da largura da viewport */
-    height: 100vh; /* 100% da altura da viewport */
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 2000;
     justify-content: center;
-    align-items: flex-end; 
+    align-items: flex-end;
 }
 
-/* Painel de Conteúdo Ajustado para 100% */
+/* Painel de Conteúdo */
 .modal-content {
-    width: 100%; /* Ocupa toda a largura */
-    height: 100%; /* Ocupa toda a altura */
-    max-width: none; /* Remove o limite de 500px */
+    width: 100%;
+    height: 100%;
+    max-width: none;
     background-color: #f0f0f0;
-    
-    /* Mantém ou remove o arredondamento conforme sua preferência */
-    border-top-left-radius: 0; 
-    border-top-right-radius: 0;
-    
+    border-top-left-radius: 30px; /* Adicionado arredondamento suave */
+    border-top-right-radius: 30px; /* Adicionado arredondamento suave */
     animation: deslizarSubida 0.3s ease-out;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Garante que o conteúdo respeite as bordas */
 }
 
 @keyframes deslizarSubida {
     from {
         transform: translateY(100%);
+        opacity: 0.5;
     }
     to {
         transform: translateY(0);
+        opacity: 1;
     }
 }
 
+/* Cabeçalho do Modal */
 .header-modal {
     background: #000;
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px; /* Altura fixa para o topo */
+    height: 70px;
 }
 
 .logo-modal {
@@ -369,14 +369,46 @@ main {
     background: none;
     border: none;
     color: #fff;
-    font-size: 28px;
+    font-size: 32px;
     cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
+.btn-fechar-modal:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-fechar-modal:active {
+    transform: scale(0.9);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Corpo do Modal */
 .modal-body {
     padding: 20px;
-    overflow-y: auto; /* Permite scroll se a lista for longa */
-    flex: 1; /* Empurra o footer para o final */
+    overflow-y: auto;
+    flex: 1;
+    background-color: #d6d6d6;
+}
+
+/* Scroll personalizado */
+.modal-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 10px;
 }
 
 #mesa-revisao-titulo {
@@ -393,15 +425,16 @@ main {
     color: #333;
 }
 
-/* Footer do Modal fixo no rodapé */
+/* Footer do Modal */
 .footer-modal {
     background: #000;
-    padding: 20px 20px 40px 20px; /* Padding extra para iPhones/Androids com barra inferior */
+    padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 20px)) 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
+    border-top: 1px solid #333;
 }
 
 .caixa-total-modal {
@@ -409,31 +442,88 @@ main {
     border-radius: 12px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 15px 20px;
     font-weight: 900;
     font-size: 18px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.valor-total-modal {
+    color: #2ecc71;
+    font-size: 22px;
+}
+
+/* Botões do Modal */
+.btn-finalizar,
+.btn-voltar-modal {
+    width: 100%;
+    border: none;
+    border-radius: 15px;
+    font-weight: 900;
+    font-size: 18px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.2s;
 }
 
 .btn-finalizar {
     background-color: #ed7d31;
     color: #000;
-    border: none;
-    border-radius: 15px;
-    padding: 20px;
-    font-weight: 900;
-    font-size: 18px;
-    text-transform: uppercase;
-    cursor: pointer;
+    padding: 18px;
+    box-shadow: 0 5px 0 #c05e1f;
+}
+
+.btn-finalizar:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #c05e1f;
 }
 
 .btn-voltar-modal {
     background: #fff;
     color: #000;
-    border: none;
-    border-radius: 15px;
     padding: 15px;
-    font-weight: 900;
-    font-size: 16px;
-    text-transform: uppercase;
-    cursor: pointer;
+    box-shadow: 0 5px 0 #cccccc;
+}
+
+.btn-voltar-modal:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #cccccc;
+    background-color: #f5f5f5;
+}
+
+/* Hover effects para desktop */
+@media (min-width: 768px) {
+    .btn-finalizar:hover {
+        opacity: 0.9;
+    }
+    
+    .btn-voltar-modal:hover {
+        background-color: #f8f8f8;
+    }
+}
+
+/* Ajuste para telas muito pequenas */
+@media (max-width: 380px) {
+    .btn-finalizar {
+        font-size: 16px;
+        padding: 15px;
+    }
+    
+    .btn-voltar-modal {
+        font-size: 14px;
+        padding: 12px;
+    }
+    
+    #mesa-revisao-titulo {
+        font-size: 22px;
+    }
+}
+
+/* Suporte para iPhone com notch */
+@supports (padding: max(0px)) {
+    .footer-modal {
+        padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+    }
 }
