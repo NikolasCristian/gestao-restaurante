@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Gerente</title>
+    <title>Historico de pagamentos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -25,8 +25,12 @@
         </div>
 
         <nav class="desktop-menu">
-            <a href="garcom.html" title="Início"><i class="fas fa-home"></i></a>
-            <a href="garcom-pedidos.html" title="Início"><i class="fas fa-clipboard-list"></i></a>
+            <a href="gerente.html" title="Início"><i class="fas fa-home"></i></a>
+            <a href="cadastrar-funcionario.html" title="Cadastrar Funcionário"><i class="fas fa-user-plus"></i></a>
+            <a href="consultar-funcionario.html" title="Consultar"><i class="fas fa-search"></i></a>
+            <a href="vendas.html" title="Vendas"><i class="fas fa-chart-line"></i></a>
+            <a href="mesas.html" title="Histórico"><i class="fas fa-utensils"></i></a>
+            <a href="sem-mesas.html" title="Histórico"><i class="fas fa-bell-concierge"></i></a>
 
             <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
         </nav>
@@ -40,13 +44,17 @@
 
     <div id="side-menu" class="side-menu">
         <div class="menu-header">
-            <span>MENU GARÇOM</span>
+            <span>MENU BARMAN</span>
             <button onclick="toggleMenu()" class="close-btn">&times;</button>
         </div>
 
         <nav class="menu-links">
-            <a href="garcom.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
-            <a href="garcom-pedidos.html" title="Início"><i class="fas fa-clipboard-list"></i>PEDIDOS</a>
+            <a href="gerente.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
+            <a href="cadastrar-funcionario.html"><i class="fas fa-user-plus"></i> CADASTRAR FUNCIONÁRIO</a>
+            <a href="consultar-funcionario.html"><i class="fas fa-search"></i> CONSULTAR FUNCIONÁRIO</a>
+            <a href="vendas.html"><i class="fas fa-chart-line"></i> VENDAS</a>
+            <a href="mesas.html" title="Histórico"><i class="fas fa-utensils"></i>GERENCIAR<br>MESAS</a>
+            <a href="sem-mesas.html" title="Histórico"><i class="fas fa-bell-concierge"></i>GERENCIAR PEDIDOS<br>SEM MESAS</a>
         </nav>
 
         <button onclick="logout()" class="logout-btn">
@@ -55,18 +63,23 @@
     </div>
 
     <main class="conteudo-principal">
-        <h2 class="titulo-painel">PAGAMENTOS</h2>
+        <h2 class="titulo-painel">HISTÓRICOS DE PAGAMENTOS</h2>
 
-        <div class="abas-navegacao">
-            <button id="aba-novos" class="aba-item active" onclick="alternarAba('PENDENTES')">PENDENTES</button>
-            <button id="aba-preparo" class="aba-item" onclick="alternarAba('PAGOS')">PAGOS</button>
+        <div class="card-preto">
+            <form id="form-add-mesa" class="form-horizontal">
+                <div class="input-field">
+                    <i class="fas fa-search"></i> <!-- Mudei de hashatag para search -->
+                    <input type="text" id="num-mesa" placeholder="Buscar por (Nome, Data e Horário)"
+                        required>
+                </div>
+            </form>
         </div>
 
         <div id="lista-pedidos" class="lista-pedidos">
         </div>
     </main>
     <script src="js/estilo-padrao.js"></script>
-    <script src="js/pagamento.js"></script>
+    <script src="js/historico.js"></script>
     <script src="js/produtos.js"></script>
 </body>
 

@@ -69,7 +69,7 @@ function renderizarInterface(pedido) {
                 const imgFinal = item.img || (dadosBase ? dadosBase.img : 'img/placeholder-bk.png');
 
                 return `
-                    <div class="card-alimento" style="display:flex; align-items:center; background:#fff; margin:10px 0; padding:15px; border-radius:20px; gap:15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 8px solid #f1a933;">
+                    <div class="card-alimento" style="display:flex; align-items:center; background:#fff; margin:15px; padding:15px; border-radius:20px; gap:15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 8px solid #f1a933;">
                         <img src="${imgFinal}" 
                              style="width: 80px; height: 80px; border-radius: 15px; object-fit: cover;" 
                              onerror="this.src='img/placeholder-bk.png'">

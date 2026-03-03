@@ -10,7 +10,7 @@
     z-index: 10000;
     align-items: center;
     justify-content: center;
-    padding: 15px;
+    padding: 40px;
     box-sizing: border-box;
 }
 
@@ -69,7 +69,7 @@
 }
 
 #modal-pagamento .modal-body {
-    padding: 20px;
+    padding: 60px;
     overflow-y: auto;
     flex: 1;
     background-color: #e0e0e0;
@@ -135,8 +135,8 @@
 }
 
 #modal-pagamento .item-img {
-    width: 45px;
-    height: 45px;
+    width: 120px;
+    height: 90px;
     min-width: 45px;
     border-radius: 8px;
     overflow: hidden;
@@ -148,7 +148,11 @@
     height: 100%;
     object-fit: cover;
 }
-
+.Conteudo-itensCard{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 #modal-pagamento .item-details {
     flex: 1;
 }
@@ -170,7 +174,19 @@
     font-weight: 900;
     font-size: 0.9rem;
     color: #000;
-    white-space: nowrap;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.qtd{
+    background-color: #dddddd;
+    width: 15%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
 }
 
 /* Subtotal do pedido */
@@ -205,11 +221,17 @@
 
 /* Footer do modal */
 #modal-pagamento .modal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #000;
     padding: 15px 20px 25px 20px;
     display: flex;
     gap: 10px;
     border-top: 1px solid #333;
+    flex-direction: column;
+    width: auto;
+    margin: 0;
 }
 
 #modal-pagamento .btn-finalizar {
@@ -224,6 +246,7 @@
     cursor: pointer;
     box-shadow: 0 4px 0 #c05e1f;
     transition: transform 0.1s, box-shadow 0.1s;
+    width: 100%;
 }
 
 #modal-pagamento .btn-finalizar:active {
@@ -243,6 +266,7 @@
     cursor: pointer;
     box-shadow: 0 4px 0 #cccccc;
     transition: transform 0.1s, box-shadow 0.1s;
+    width: 100%;
 }
 
 #modal-pagamento .btn-voltar-modal:active {
@@ -323,7 +347,7 @@
 .btn-ver {
     background: #6eff9d;
     border: none;
-    min-width: 100px;
+    min-width: 270px;
     height: 50px;
     padding: 0 15px;
     border-radius: 15px;
@@ -352,10 +376,34 @@
     box-shadow: 0 4px 0 #7f8c8d;
 }
 
+
+.input-field {
+    flex: 2;
+    background: #fff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    margin: 30px;
+}
+
+.input-field i {
+    color: #ed7d31;
+    margin-right: 10px;
+}
+
+.input-field input {
+    border: none;
+    outline: none;
+    padding: 12px 0;
+    width: 100%;
+    font-weight: bold;
+    font-size: 16px;
+}
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 607px) {
     .btn-ver {
-        min-width: 90px;
+        min-width: 240px;
         font-size: 16px;
     }
 }
@@ -376,7 +424,29 @@
     }
     
     .btn-ver {
-        min-width: 80px;
+        min-width: 200px;
+        height: 45px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 512px) {
+    .item-pedido-lista {
+        padding: 12px;
+    }
+    
+    .mesa-indicador {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+    
+    .info-pedido strong {
+        font-size: 16px;
+    }
+    
+    .btn-ver {
+        min-width: 160px;
         height: 45px;
         font-size: 15px;
     }

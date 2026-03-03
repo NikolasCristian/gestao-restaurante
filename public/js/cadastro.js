@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const senha = document.getElementById('senha')?.value || '';
         const confirmarSenha = document.getElementById('confirmar-senha')?.value || '';
 
+        if (cargo === 'GARÇOM') {
+            cargo = 'GARCOM';
+        }
+        
         // 2. Validações básicas
         if (senha !== confirmarSenha) {
             alert('⚠️ As senhas não coincidem!');
