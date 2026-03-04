@@ -14,6 +14,7 @@
     <script src="config/auth.js"></script>
     <link rel="stylesheet" href="css/estilo-padrao.css">
     <link rel="stylesheet" href="css/cozinha.css">
+    <link rel="stylesheet" href="css/pagamento.css">
 </head>
 
 <body>
@@ -24,7 +25,9 @@
         </div>
 
         <nav class="desktop-menu">
-            <a href="cozinha.html" title="Início"><i class="fas fa-home"></i></a>
+            <a href="garcom.html" title="Início"><i class="fas fa-home"></i></a>
+            <a href="garcom-pedidos.html" title="Início"><i class="fas fa-clipboard-list"></i></a>
+
             <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
         </nav>
 
@@ -37,12 +40,13 @@
 
     <div id="side-menu" class="side-menu">
         <div class="menu-header">
-            <span>MENU COZINHA</span>
+            <span>MENU GARÇOM</span>
             <button onclick="toggleMenu()" class="close-btn">&times;</button>
         </div>
 
         <nav class="menu-links">
-            <a href="cozinha.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
+            <a href="garcom.html"><i class="fas fa-home"></i> PAINEL PRINCIPAL</a>
+            <a href="garcom-pedidos.html" title="Início"><i class="fas fa-clipboard-list"></i>PEDIDOS</a>
         </nav>
 
         <button onclick="logout()" class="logout-btn">
@@ -51,18 +55,19 @@
     </div>
 
     <main class="conteudo-principal">
-        <h2 class="titulo-painel">PAINEL DA COZINHA</h2>
+        <h2 class="titulo-painel">PAGAMENTOS</h2>
 
         <div class="abas-navegacao">
-            <button id="aba-novos" class="aba-item active" onclick="alternarAba('Enviado')">NOVOS</button>
-            <button id="aba-preparo" class="aba-item" onclick="alternarAba('Preparando')">EM PREPARO</button>
+            <button id="aba-novos" class="aba-item active" onclick="alternarAba('PENDENTES')">PENDENTES</button>
+            <button id="aba-preparo" class="aba-item" onclick="alternarAba('PAGOS')">PAGOS</button>
         </div>
 
         <div id="lista-pedidos" class="lista-pedidos">
         </div>
     </main>
-
-    <script src="js/cozinha.js"></script>
+    <script src="js/estilo-padrao.js"></script>
+    <script src="js/pagamento.js"></script>
+    <script src="js/produtos.js"></script>
 </body>
 
 </html>

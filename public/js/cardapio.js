@@ -222,6 +222,10 @@ async function confirmarPedidoComPreferencia() {
 }
 
 // --- FUNÇÃO DE ENVIO PARA FIREBASE COM CONFIRMAÇÃO FINAL ---
+/**
+ * ENVIA O PEDIDO PARA O FIREBASE
+ * Salva o nome do garçom que anotou o pedido
+ */
 async function enviarPedidoFirebase() {
     // Se já estiver processando, não faz nada
     if (processandoPedido) {
@@ -240,6 +244,48 @@ async function enviarPedidoFirebase() {
     
     // Desabilita todos os botões de confirmação
     desabilitarBotoesConfirmacao();
+    
+    // ====================================================
+    // OBTÉM O NOME DO GARÇOM LOGADO
+    // ====================================================
+    let nomeGarcom = "Garçom não identificado";
+    
+    try {
+        const user = firebase.auth().currentUser;
+        if (user) {
+            // Tenta buscar o nome no documento do usuário
+            const userDoc = await db.collection("users").doc(user.uid).get();
+            
+            if (userDoc.exists) {
+                // Se encontrar no banco, usa o nome cadastrado
+                nomeGarcom = userDoc.data().nome || user.displayName || user.email || "Garçom";
+            } else {
+                // Fallback para displayName ou email
+                nomeGarcom = user.displayName || user.email || "Garçom";
+            }
+            
+            // Remove parte de email se tiver (@)
+            if (nomeGarcom.includes('@')) {
+                nomeGarcom = nomeGarcom.split('@')[0];
+            }
+        }
+    } catch (error) {
+        console.warn("Erro ao buscar nome do garçom:", error);
+        // Em caso de erro, tenta pegar do auth
+        const user = firebase.auth().currentUser;
+        if (user) {
+            nomeGarcom = user.displayName || user.email?.split('@')[0] || "Garçom";
+        }
+    }
+    
+    // Capitaliza o nome (primeira letra maiúscula)
+    nomeGarcom = nomeGarcom.charAt(0).toUpperCase() + nomeGarcom.slice(1).toLowerCase();
+    
+    console.log(`👨‍🍳 Pedido sendo enviado por: ${nomeGarcom}`);
+    
+    // ====================================================
+    // CONTINUA COM O ENVIO DO PEDIDO
+    // ====================================================
     
     const mesaTexto = document.getElementById('numero-mesa').innerText;
     const numeroMesa = mesaTexto.replace('Mesa ', '').trim();
@@ -286,7 +332,10 @@ async function enviarPedidoFirebase() {
                     horario: firebase.firestore.FieldValue.serverTimestamp(),
                     statusDoPedido: 'ENVIADO',
                     StatusDaBebida: "Nao se aplica",
-                    tipo: "comida"
+                    tipo: "comida",
+                    // ===== CAMPO DO GARÇOM ADICIONADO =====
+                    anotadoPor: nomeGarcom,
+                    garcomId: firebase.auth().currentUser?.uid || null
                 });
             }
 
@@ -298,7 +347,10 @@ async function enviarPedidoFirebase() {
                     horario: firebase.firestore.FieldValue.serverTimestamp(),
                     statusDoPedido: 'ENVIADO',
                     StatusDaBebida: "EntregarAgora",
-                    tipo: "bebida"
+                    tipo: "bebida",
+                    // ===== CAMPO DO GARÇOM ADICIONADO =====
+                    anotadoPor: nomeGarcom,
+                    garcomId: firebase.auth().currentUser?.uid || null
                 });
             }
         } else {
@@ -308,7 +360,10 @@ async function enviarPedidoFirebase() {
                 horario: firebase.firestore.FieldValue.serverTimestamp(),
                 statusDoPedido: 'ENVIADO',
                 StatusDaBebida: "EntregarComLanche",
-                tipo: "completo"
+                tipo: "completo",
+                // ===== CAMPO DO GARÇOM ADICIONADO =====
+                anotadoPor: nomeGarcom,
+                garcomId: firebase.auth().currentUser?.uid || null
             });
         }
 
@@ -326,7 +381,7 @@ async function enviarPedidoFirebase() {
         window.statusEntregaBebida = null;
         Object.keys(pedidoAtual).forEach(key => pedidoAtual[key] = 0);
         
-        alert("✅ Pedido enviado com sucesso!");
+        alert(`✅ Pedido enviado com sucesso por ${nomeGarcom}!`);
         window.location.href = "garcom.html";
 
     } catch (error) {

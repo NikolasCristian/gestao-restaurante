@@ -4,16 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Garçom</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <title>Historico de pagamentos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="config/auth.js"></script>
     <link rel="stylesheet" href="css/estilo-padrao.css">
-
-    <link rel="stylesheet" href="css/gerente-mesas.css">
+    <link rel="stylesheet" href="css/cozinha.css">
+    <link rel="stylesheet" href="css/pagamento.css">
 </head>
 
 <body>
@@ -28,7 +29,7 @@
             <a href="cadastrar-funcionario.html" title="Cadastrar Funcionário"><i class="fas fa-user-plus"></i></a>
             <a href="consultar-funcionario.html" title="Consultar"><i class="fas fa-search"></i></a>
             <a href="vendas.html" title="Vendas"><i class="fas fa-chart-line"></i></a>
-            <a href="historico.html" title="Histórico"><i class="fas fa-history"></i></a>
+            <a href="mesas.html" title="Histórico"><i class="fas fa-utensils"></i></a>
             <a href="sem-mesas.html" title="Histórico"><i class="fas fa-bell-concierge"></i></a>
 
             <button onclick="logout()" class="btn-sair-topo" title="Sair"><i class="fas fa-power-off"></i></button>
@@ -43,7 +44,7 @@
 
     <div id="side-menu" class="side-menu">
         <div class="menu-header">
-            <span>MENU GERENTE</span>
+            <span>MENU BARMAN</span>
             <button onclick="toggleMenu()" class="close-btn">&times;</button>
         </div>
 
@@ -52,7 +53,7 @@
             <a href="cadastrar-funcionario.html"><i class="fas fa-user-plus"></i> CADASTRAR FUNCIONÁRIO</a>
             <a href="consultar-funcionario.html"><i class="fas fa-search"></i> CONSULTAR FUNCIONÁRIO</a>
             <a href="vendas.html"><i class="fas fa-chart-line"></i> VENDAS</a>
-            <a href="historico.html"><i class="fas fa-history"></i> HISTÓRICO DE PAGAMENTOS</a>
+            <a href="mesas.html" title="Histórico"><i class="fas fa-utensils"></i>GERENCIAR<br>MESAS</a>
             <a href="sem-mesas.html" title="Histórico"><i class="fas fa-bell-concierge"></i>GERENCIAR PEDIDOS<br>SEM MESAS</a>
         </nav>
 
@@ -61,37 +62,25 @@
         </button>
     </div>
 
-    <main class="container">
-        <section class="card-admin">
-            <div class="header-sessao">
-                <h2><i class="fas fa-plus-circle"></i> ADICIONAR NOVA MESA</h2>
-                <p>Insira o número da mesa para gerar o ID automático.</p>
-            </div>
+    <main class="conteudo-principal">
+        <h2 class="titulo-painel">HISTÓRICOS DE PAGAMENTOS</h2>
 
-            <div class="card-preto">
-                <form id="form-add-mesa" class="form-horizontal">
-                    <div class="input-field">
-                        <i class="fas fa-hashtag"></i>
-                        <input type="number" id="num-mesa" placeholder="Nº DA MESA (ex: 10)" required>
-                    </div>
-                    <button type="submit" class="btn-criar">
-                        <i class="fas fa-save"></i> CRIAR MESA
-                    </button>
-                </form>
-            </div>
-        </section>
+        <div class="card-preto">
+            <form id="form-add-mesa" class="form-horizontal">
+                <div class="input-field">
+                    <i class="fas fa-search"></i> <!-- Mudei de hashatag para search -->
+                    <input type="text" id="num-mesa" placeholder="Buscar por (Nome, Data e Horário)"
+                        required>
+                </div>
+            </form>
+        </div>
 
-        <section class="lista-mesas">
-            <div class="header-sessao">
-                <h3><i class="fas fa-th"></i> MESAS NO SISTEMA</h3>
-            </div>
-            <div id="grid-lista-mesas" class="stats-grid-mesas">
-            </div>
-        </section>
+        <div id="lista-pedidos" class="lista-pedidos">
+        </div>
     </main>
-
     <script src="js/estilo-padrao.js"></script>
-    <script src="js/gerente-mesas.js"></script>
+    <script src="js/historico.js"></script>
+    <script src="js/produtos.js"></script>
 </body>
 
 </html>

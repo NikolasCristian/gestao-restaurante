@@ -68,7 +68,7 @@ function renderizarInterface(pedido) {
                         <h3 style="margin:0; font-family:'Arial Black', sans-serif; font-size:18px;">${item.nome}</h3>
                         <p style="margin:5px 0 0; color:#666; font-size:13px;">${item.observacao || item.descricao || ''}</p>
                     </div>
-                    <div class="qtd-indicador" style="background:#f1a933; color: white; padding:10px 18px; border-radius:12px; font-weight:900; font-size:20px;">
+                    <div class="qtd-indicador" style="background: #f1a933; color: white; padding:10px 18px; border-radius:12px; font-weight:900; font-size:20px;">
                         ${item.quantidade}
                     </div>
                 </div>

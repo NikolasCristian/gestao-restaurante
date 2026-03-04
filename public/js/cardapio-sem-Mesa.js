@@ -293,6 +293,10 @@ async function confirmarPedidoComPreferencia() {
 }
 
 // --- FUNÇÃO DE ENVIO PARA FIREBASE COM CONTROLE DE DUPLICIDADE ---
+/**
+ * ENVIA O PEDIDO SEM MESA PARA O FIREBASE
+ * Salva o nome do garçom que anotou o pedido
+ */
 async function enviarPedidoFirebase() {
     // Se já estiver processando, não faz nada
     if (processandoPedido) {
@@ -305,6 +309,48 @@ async function enviarPedidoFirebase() {
     
     // Desabilita todos os botões de confirmação visualmente
     desabilitarBotoesConfirmacao();
+    
+    // ====================================================
+    // OBTÉM O NOME DO GARÇOM LOGADO
+    // ====================================================
+    let nomeGarcom = "Garçom não identificado";
+    
+    try {
+        const user = firebase.auth().currentUser;
+        if (user) {
+            // Tenta buscar o nome no documento do usuário
+            const userDoc = await db.collection("users").doc(user.uid).get();
+            
+            if (userDoc.exists) {
+                // Se encontrar no banco, usa o nome cadastrado
+                nomeGarcom = userDoc.data().nome || user.displayName || user.email || "Garçom";
+            } else {
+                // Fallback para displayName ou email
+                nomeGarcom = user.displayName || user.email || "Garçom";
+            }
+            
+            // Remove parte de email se tiver (@)
+            if (nomeGarcom.includes('@')) {
+                nomeGarcom = nomeGarcom.split('@')[0];
+            }
+        }
+    } catch (error) {
+        console.warn("Erro ao buscar nome do garçom:", error);
+        // Em caso de erro, tenta pegar do auth
+        const user = firebase.auth().currentUser;
+        if (user) {
+            nomeGarcom = user.displayName || user.email?.split('@')[0] || "Garçom";
+        }
+    }
+    
+    // Capitaliza o nome (primeira letra maiúscula)
+    nomeGarcom = nomeGarcom.charAt(0).toUpperCase() + nomeGarcom.slice(1).toLowerCase();
+    
+    console.log(`👨‍🍳 Pedido SEM MESA sendo enviado por: ${nomeGarcom}`);
+    
+    // ====================================================
+    // CONTINUA COM O ENVIO DO PEDIDO
+    // ====================================================
     
     const mesaTexto = document.getElementById('numero-mesa').innerText;
     const isSemMesa = mesaTexto.includes('Sem Mesa');
@@ -346,13 +392,16 @@ async function enviarPedidoFirebase() {
             });
         }
 
-        // Dados base do pedido
+        // Dados base do pedido (AGORA COM O NOME DO GARÇOM)
         const dadosBase = {
             horario: firebase.firestore.FieldValue.serverTimestamp(),
             statusDoPedido: 'ENVIADO',
             StatusDaBebida: statusFinalBebida,
             nomeCliente: window.nomeClienteSemMesa || "Cliente não identificado",
-            tipoPedido: "sem_mesa"
+            tipoPedido: "sem_mesa",
+            // ===== CAMPOS DO GARÇOM ADICIONADOS =====
+            anotadoPor: nomeGarcom,
+            garcomId: firebase.auth().currentUser?.uid || null
         };
 
         if (statusFinalBebida === "EntregarAgora") {
@@ -401,17 +450,17 @@ async function enviarPedidoFirebase() {
         // Limpa o carrinho atual
         Object.keys(pedidoAtual).forEach(key => pedidoAtual[key] = 0);
         
-        alert("Pedido enviado com sucesso!");
+        alert(`✅ Pedido de ${window.nomeClienteSemMesa || 'cliente'} enviado por ${nomeGarcom}!`);
         
         // REDIRECIONA PARA O PAINEL DO GARÇOM
         window.location.href = "garcom.html";
 
     } catch (error) {
         console.error("Erro ao salvar:", error);
-        alert("Erro técnico: " + error.message);
+        alert("❌ Erro técnico: " + error.message);
+        
         // Libera a flag em caso de erro
         processandoPedido = false;
-        // Reabilita os botões
         reabilitarBotoesConfirmacao();
     }
 }

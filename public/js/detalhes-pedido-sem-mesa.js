@@ -69,7 +69,7 @@ function renderizarInterface(pedido) {
                 const imgFinal = item.img || (dadosBase ? dadosBase.img : 'img/placeholder-bk.png');
 
                 return `
-                    <div class="card-alimento" style="display:flex; align-items:center; background:#fff; margin:10px 0; padding:15px; border-radius:20px; gap:15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 8px solid #f1a933;">
+                    <div class="card-alimento" style="display:flex; align-items:center; background:#fff; margin:15px; padding:15px; border-radius:20px; gap:15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 8px solid #f1a933;">
                         <img src="${imgFinal}" 
                              style="width: 80px; height: 80px; border-radius: 15px; object-fit: cover;" 
                              onerror="this.src='img/placeholder-bk.png'">
@@ -78,7 +78,7 @@ function renderizarInterface(pedido) {
                             <h3 style="margin:0; font-family:'Arial Black', sans-serif; font-size:18px;">${item.nome}</h3>
                             <p style="margin:5px 0 0; color:#666; font-size:13px;">${item.observacao || item.descricao || ''}</p>
                         </div>
-                        <div class="qtd-indicador" style="background:#f1a933; color: white; padding:10px 18px; border-radius:12px; font-weight:900; font-size:20px;">
+                        <div class="qtd-indicador" style="background: #f1a933; color: white; padding:10px 18px; border-radius:12px; font-weight:900; font-size:20px;">
                             ${item.quantidade}
                         </div>
                     </div>
