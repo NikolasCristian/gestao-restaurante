@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/index.css">
-    <title>Login - Burger System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Login - Consulado Alvinegro</title>
 </head>
 <body>
 
@@ -12,11 +13,38 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg" class="logo" alt="Logo">
         
         <input type="email" id="email" placeholder="Email">
-        <input type="password" id="senha" placeholder="Senha">
         
-        <a href="#" class="forgot">esqueci a senha</a>
+        <!-- INPUT COM TOGGLE -->
+        <div class="input-group">
+            <input type="password" id="senha" placeholder="Senha">
+            <i class="fas fa-eye toggle-password" onclick="toggleSenha('senha', this)"></i>
+        </div>
         
-        <button onclick="login()">ENTRAR</button>
+        <a href="#" id="forgotPassword" class="forgot">Esqueci minha senha</a>
+        
+        <button onclick="login()" id="loginBtn">ENTRAR</button>
+    </div>
+
+    <!-- MODAL ESQUECI A SENHA -->
+    <div id="forgotModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>RECUPERAR SENHA</h2>
+            <p>Digite seu e-mail para receber o link de recuperação</p>
+            
+            <input type="email" id="resetEmail" placeholder="Seu e-mail">
+            
+            <div id="modalMessage" class="modal-message"></div>
+            
+            <button onclick="enviarRecuperacao()" id="resetBtn">
+                <span>ENVIAR LINK</span>
+                <div class="spinner"></div>
+            </button>
+            
+            <div class="modal-footer">
+                <small>O link será enviado em até 5 minutos</small>
+            </div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
