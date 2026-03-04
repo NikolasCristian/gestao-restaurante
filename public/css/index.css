@@ -1,57 +1,574 @@
-body {
-background-color: #000; /* Fundo preto conforme sua tela */
-font-family: Arial, sans-serif;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-margin: 0;
+/* ========== ESTILO GERAL ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+body {
+    background: linear-gradient(-190deg, #420000 0%, #000000 100%);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #fff;
+    padding: 15px;
+}
+
+/* ========== CONTAINER DE LOGIN ========== */
 .login-container {
-width: 320px;
-padding: 40px 20px;
-border: 2px solid #ff0000; /* Borda vermelha com brilho */
-border-radius: 30px;
-text-align: center;
-box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    padding: clamp(25px, 6vw, 40px) clamp(15px, 4vw, 20px);
+    border: 1px solid #ff0000;
+    border-radius: clamp(20px, 5vw, 30px);
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+    background: linear-gradient(190deg, #420000 0%, #000000 100%);
+    backdrop-filter: blur(5px);
+    animation: glowPulse 3s infinite;
+    margin: 15px;
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.3); }
+    50% { box-shadow: 0 0 50px rgba(255, 0, 0, 0.6); }
 }
 
 .logo {
-width: 150px;
-margin-bottom: 30px;
+    width: clamp(120px, 40vw, 150px);
+    margin-bottom: clamp(20px, 5vw, 30px);
+    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
 }
 
+/* ========== INPUTS ========== */
 input {
-width: 100%;
-padding: 15px;
-margin: 10px 0;
-background: #111;
-border: none;
-border-radius: 12px;
-color: #ff0000; /* Texto vermelho nos inputs */
-font-weight: bold;
-box-sizing: border-box;
+    width: 100%;
+    padding: clamp(12px, 3vw, 15px);
+    margin: 8px 0;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: clamp(10px, 3vw, 12px);
+    color: #ff0000;
+    font-weight: bold;
+    box-sizing: border-box;
+    transition: all 0.3s;
+    font-size: clamp(14px, 4vw, 16px);
 }
 
-input::placeholder { color: #555; }
+input::placeholder { 
+    color: #555; 
+    font-size: clamp(12px, 3.5vw, 14px);
+}
 
+input:focus {
+    outline: none;
+    border-color: #ff0000;
+    background: #1a1a1a;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+/* ========== LINK ESQUECI SENHA ========== */
 .forgot {
-color: #ff0000;
-font-size: 12px;
-text-decoration: none;
-display: block;
-margin: 10px 0;
+    color: #ff0000;
+    font-size: clamp(11px, 3vw, 12px);
+    text-decoration: none;
+    display: block;
+    margin: 12px 0 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
 }
 
+.forgot:hover {
+    text-shadow: 0 0 10px #ff0000;
+    transform: scale(1.05);
+}
+
+/* ========== BOTÃO PRINCIPAL ========== */
 button {
-width: 100%;
-padding: 15px;
-background-color: #f1b434; /* Amarelo do botão ENTRAR */
-border: none;
-border-radius: 15px;
-font-size: 18px;
-font-weight: 900;
-cursor: pointer;
-margin-top: 10px;
+    width: 100%;
+    padding: clamp(12px, 3.5vw, 15px);
+    background: linear-gradient(45deg, #8b0000, #ff0000);
+    border: none;
+    border-radius: clamp(12px, 4vw, 15px);
+    font-size: clamp(16px, 5vw, 18px);
+    font-weight: 900;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+}
+
+button:hover {
+    background: linear-gradient(45deg, #ff0000, #8b0000);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.5);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ========== MODAL ========== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+    border: 2px solid #ff0000;
+    border-radius: clamp(20px, 5vw, 30px);
+    margin: 5% auto;
+    padding: clamp(25px, 6vw, 40px) clamp(20px, 5vw, 30px);
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    box-shadow: 0 0 50px rgba(255, 0, 0, 0.4);
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Botão fechar */
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: clamp(24px, 6vw, 28px);
+    font-weight: bold;
+    color: #ff0000;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: clamp(35px, 8vw, 40px);
+    height: clamp(35px, 8vw, 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.1);
+}
+
+.close:hover {
+    color: #fff;
+    background: #ff0000;
+    transform: rotate(90deg);
+}
+
+/* Títulos do modal */
+.modal h2 {
+    color: #ff0000;
+    font-size: clamp(20px, 6vw, 24px);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    word-break: break-word;
+}
+
+.modal p {
+    color: #ccc;
+    margin-bottom: 20px;
+    font-size: clamp(13px, 3.5vw, 14px);
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* Input do modal */
+.modal input {
+    width: 100%;
+    padding: clamp(12px, 3.5vw, 15px);
+    margin: 10px 0 20px;
+    background: #000;
+    border: 1px solid #ff0000;
+    border-radius: clamp(10px, 3vw, 12px);
+    color: #ff0000;
+    font-weight: bold;
+    box-sizing: border-box;
+    font-size: clamp(14px, 4vw, 16px);
+}
+
+.modal input:focus {
+    outline: none;
+    border-width: 2px;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.modal input::placeholder {
+    color: #333;
+    font-size: clamp(12px, 3.5vw, 14px);
+}
+
+/* Botão do modal */
+.modal button {
+    width: 100%;
+    padding: clamp(12px, 3.5vw, 15px);
+    background: linear-gradient(45deg, #8b0000, #ff0000);
+    border: none;
+    border-radius: clamp(12px, 4vw, 15px);
+    font-size: clamp(14px, 4vw, 16px);
+    font-weight: 900;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    text-transform: uppercase;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+.modal button:hover {
+    background: linear-gradient(45deg, #ff0000, #8b0000);
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+}
+
+/* Spinner de carregamento */
+.modal button .spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.modal button.loading .spinner {
+    display: inline-block;
+}
+
+.modal button.loading span {
+    opacity: 0.8;
+}
+
+/* Mensagens do modal */
+.modal-message {
+    padding: clamp(10px, 3vw, 12px);
+    border-radius: clamp(10px, 3vw, 12px);
+    margin: 15px 0;
+    display: none;
+    font-size: clamp(12px, 3.5vw, 13px);
+    text-align: center;
+    font-weight: bold;
+    animation: slideIn 0.3s;
+    word-break: break-word;
+}
+
+.modal-message.success {
+    display: block;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.modal-message.error {
+    display: block;
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    text-shadow: 0 0 5px #ff0000;
+}
+
+.modal-message.info {
+    display: block;
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid #ff0000;
+    color: #ff0000;
+}
+
+/* Timer de cooldown */
+.cooldown-timer {
+    margin-top: 15px;
+    font-size: clamp(12px, 3.5vw, 13px);
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+    animation: pulse 1s infinite;
+    text-shadow: 0 0 5px #ff0000;
+    word-break: break-word;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Rodapé do modal */
+.modal-footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #666;
+    font-size: clamp(10px, 3vw, 11px);
+    border-top: 1px solid #333;
+    padding-top: 15px;
+}
+
+/* ========== ELEMENTOS DECORATIVOS ========== */
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff0000, transparent);
+}
+
+.login-container::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: 10%;
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff0000, transparent);
+}
+
+/* ========== RESPONSIVIDADE ESPECÍFICA ========== */
+
+/* Telas muito pequenas (celulares em modo retrato) */
+@media (max-width: 380px) {
+    body {
+        padding: 10px;
+    }
+    
+    .login-container {
+        margin: 10px;
+        padding: 20px 12px;
+    }
+    
+    .logo {
+        width: 100px;
+        margin-bottom: 15px;
+    }
+    
+    .forgot {
+        font-size: 10px;
+        margin: 8px 0 12px;
+    }
+    
+    button {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        padding: 20px 15px;
+    }
+    
+    .modal h2 {
+        font-size: 18px;
+    }
+    
+    .modal p {
+        font-size: 12px;
+    }
+    
+    .close {
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+        right: 10px;
+        top: 8px;
+    }
+}
+
+/* Telas médias (celulares em modo paisagem) */
+@media (min-width: 381px) and (max-width: 480px) {
+    .login-container {
+        max-width: 350px;
+    }
+    
+    .modal-content {
+        max-width: 380px;
+    }
+}
+
+/* Telas grandes (tablets) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .login-container {
+        max-width: 400px;
+    }
+    
+    .modal-content {
+        max-width: 450px;
+    }
+}
+
+/* Ajustes para telas muito altas */
+@media (min-height: 800px) {
+    .modal-content {
+        margin: 15% auto;
+    }
+}
+
+/* Ajustes para telas baixas */
+@media (max-height: 600px) {
+    .modal-content {
+        margin: 5% auto;
+    }
+    
+    body {
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+}
+
+/* ========== SCROLLBAR PERSONALIZADA ========== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ff0000;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8b0000;
+}
+
+/* ========== OTIMIZAÇÕES PARA TOQUE ========== */
+@media (hover: none) and (pointer: coarse) {
+    button, 
+    .forgot, 
+    .close {
+        cursor: default;
+    }
+    
+    button:active {
+        transform: scale(0.98);
+    }
+    
+    input {
+        font-size: 16px; /* Previne zoom automático no iOS */
+    }
+}
+
+/* ========== PREVENÇÃO DE TRANBORDAMENTO ========== */
+img, video, iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ========== ANIMAÇÕES SUAVES ========== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========== INPUT GROUP PARA TOGGLE ========== */
+.input-group {
+    position: relative;
+    width: 100%;
+    margin: 8px 0;
+}
+
+.input-group input {
+    width: 100%;
+    padding: clamp(12px, 3vw, 15px);
+    padding-right: 45px; /* Espaço para o ícone */
+    margin: 0; /* Remove a margin duplicada */
+}
+
+/* Ícone do toggle */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff0000;
+    cursor: pointer;
+    font-size: clamp(18px, 4vw, 20px);
+    transition: all 0.3s;
+    background: transparent;
+    border: none;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.toggle-password:hover {
+    color: #fff;
+    text-shadow: 0 0 10px #ff0000;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.toggle-password:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+/* Ajuste para mobile */
+@media (max-width: 380px) {
+    .toggle-password {
+        right: 8px;
+        font-size: 16px;
+    }
+}
+
+/* Otimizações para toque */
+@media (hover: none) and (pointer: coarse) {
+    .toggle-password {
+        cursor: default;
+    }
+    
+    .toggle-password:active {
+        transform: translateY(-50%) scale(0.95);
+    }
 }
