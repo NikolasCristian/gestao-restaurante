@@ -155,3 +155,8 @@
         flex-direction: column;
     }
 }
+
+.pedido-sem-mesa a{
+    text-decoration: none;
+    color: #000;
+}

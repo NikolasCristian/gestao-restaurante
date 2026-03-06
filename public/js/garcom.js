@@ -121,12 +121,3 @@ setInterval(() => {
         }
     });
 }, 60000); // 60.000ms = 1 minuto
-
-// Lógica para o botão "PEDIDO SEM MESA"
-const btnSemMesa = document.querySelector('.btn-sem-mesa');
-if (btnSemMesa) {
-    btnSemMesa.onclick = () => {
-        // Redireciona para o cardápio com um identificador de pedido avulso
-        window.location.href = 'cardapio-sem-mesa.html';
-    };
-}
